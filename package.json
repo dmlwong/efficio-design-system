@@ -1,0 +1,41 @@
+{
+  "name": "efficio-orbit",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build:docs && npm run build:prototypes",
+    "build:orbit": "npm run build -w @efficio/orbit",
+    "build:docs": "npm run build -w @efficio/orbit-docs",
+    "build:prototypes": "npm run build -w @efficio/orbit-prototypes",
+    "dev:docs": "npm run dev -w @efficio/orbit-docs",
+    "dev:prototypes": "npm run dev -w @efficio/orbit-prototypes",
+    "lint": "node scripts/lint-noninteractive.mjs",
+    "audit:design-system": "node scripts/design-system-static-audit.mjs",
+    "typecheck:orbit": "npm run typecheck -w @efficio/orbit",
+    "pack:orbit": "npm pack ./packages/orbit",
+    "test:components": "vitest run",
+    "test:components:watch": "vitest",
+    "build:design-md": "tsx scripts/build-design-md.ts"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^29.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.4.5",
+    "vitest": "^4.1.5"
+  }
+}

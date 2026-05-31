@@ -1,0 +1,62 @@
+{
+  "name": "@efficio/orbit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "style": "./styles.css",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.build.json && node ../../scripts/copy-orbit-assets.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": {
+      "default": "./styles.css"
+    },
+    "./tokens.css": {
+      "default": "./tokens.css"
+    },
+    "./fonts.css": {
+      "default": "./fonts.css"
+    },
+    "./base.css": {
+      "default": "./base.css"
+    },
+    "./reset.css": {
+      "default": "./reset.css"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles.css",
+    "tokens.css",
+    "fonts.css",
+    "base.css",
+    "reset.css",
+    "styles/tokens",
+    "fonts/Font Awesome 6 Pro-Regular-400.otf",
+    "fonts/Font Awesome 6 Pro-Solid-900.otf",
+    "README.md",
+    "package.json"
+  ],
+  "sideEffects": [
+    "*.css",
+    "**/*.css"
+  ],
+  "peerDependencies": {
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1"
+  }
+}

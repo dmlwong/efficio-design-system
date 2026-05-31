@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "orbit-docs",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:docs"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "orbit-prototypes",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:prototypes"],
+      "port": 3001,
+      "autoPort": true
+    }
+  ]
+}

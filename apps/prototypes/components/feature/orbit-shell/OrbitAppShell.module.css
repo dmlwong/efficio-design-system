@@ -1,0 +1,13 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  font-family: var(--orbit-font-family-sans);
+}
+
+.mainArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--orbit-color-card-bg-accent);
+}

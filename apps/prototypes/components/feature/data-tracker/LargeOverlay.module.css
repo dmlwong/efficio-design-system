@@ -1,0 +1,30 @@
+.backdrop {
+  position: fixed;
+  inset: var(--orbit-space-0);
+  background-color: var(--orbit-color-overlay-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--orbit-z-overlay);
+  padding: var(--orbit-space-m);
+}
+
+.modal {
+  background-color: var(--orbit-color-bg-default);
+  border-radius: var(--orbit-radius-lg);
+  box-shadow: var(--orbit-shadow-lg);
+  width: 100%;
+  max-width: var(--lo-max-width, 1200px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+.modal:focus-visible {
+  outline: 2px solid var(--orbit-color-focus-ring, currentColor);
+  outline-offset: -2px;
+  border-radius: var(--orbit-radius-lg);
+}

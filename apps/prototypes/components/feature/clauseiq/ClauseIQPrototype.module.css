@@ -1,0 +1,422 @@
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px var(--orbit-space-m) 80px;
+  background-color: var(--orbit-color-bg-canvas);
+  background-image:
+    linear-gradient(var(--orbit-color-bg-canvas-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--orbit-color-bg-canvas-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.column {
+  width: min(100%, 640px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-base);
+}
+
+.cardFrame {
+  width: 100%;
+  scroll-margin-top: var(--orbit-space-m);
+  animation: cardEnter 0.3s ease;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-base);
+  transition: opacity 0.2s ease;
+}
+
+.cardDisabled {
+  pointer-events: none;
+  opacity: 1;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-base);
+}
+
+.stackSmall {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-s);
+}
+
+.stackTiny {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-s);
+}
+
+.rowBetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orbit-space-base);
+}
+
+.iconTile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: linear-gradient(
+    to bottom,
+    var(--orbit-color-sidenav-gradient-from),
+    var(--orbit-color-sidenav-gradient-to)
+  );
+  flex: 0 0 48px;
+  overflow: hidden;
+}
+
+.iconTileCompact {
+  width: 48px;
+  height: 48px;
+  flex-basis: 48px;
+}
+
+.iconBadge {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.welcomeTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-s);
+}
+
+.summaryBox {
+  padding: var(--orbit-space-base);
+  border: 1px solid var(--orbit-color-card-border-accent);
+  border-radius: var(--orbit-radius-md);
+  background: var(--orbit-color-card-bg-accent);
+}
+
+.fullWidthButton,
+.fullWidthButton > button {
+  width: 100%;
+}
+
+.selectionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orbit-space-base);
+  min-height: calc(var(--orbit-btn-height-medium) + (var(--orbit-space-xs) * 2));
+  padding: var(--orbit-space-xs) var(--orbit-space-m);
+  border: 1px solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-md);
+  background: var(--orbit-color-card-bg-default);
+}
+
+.parameterRow {
+  display: flex;
+  gap: var(--orbit-space-s);
+  width: 100%;
+}
+
+.parameterCard {
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orbit-space-s);
+  padding: var(--orbit-space-base);
+  border: 1px solid var(--orbit-color-card-border-default);
+  border-radius: var(--orbit-radius-md);
+  background: var(--orbit-color-bg-default);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.parameterCard:hover {
+  border-color: var(--orbit-color-card-border-highlight);
+  background: var(--orbit-color-bg-hover);
+}
+
+.parameterCard:focus-visible {
+  outline: 2px solid var(--orbit-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.parameterCardExpanded {
+  border-color: var(--orbit-color-card-border-highlight);
+  background: var(--orbit-color-card-bg-accent);
+}
+
+.parameterLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--orbit-space-xs);
+}
+
+.parameterRadio {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--orbit-color-btn-secondary-icon);
+  background: var(--orbit-color-bg-default);
+  flex-shrink: 0;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.parameterRadioChecked {
+  border-color: var(--orbit-color-card-border-highlight);
+}
+
+.parameterRadioChecked::after {
+  content: '';
+  position: absolute;
+  inset: 2.5px;
+  border-radius: 50%;
+  background: var(--orbit-color-card-border-highlight);
+}
+
+.parameterDropdown {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--orbit-color-card-border-highlight);
+  border-radius: var(--orbit-radius-md);
+  background: var(--orbit-color-bg-default);
+  overflow: hidden;
+  animation: cardEnter 0.2s ease;
+}
+
+.parameterSearchRow {
+  padding: var(--orbit-space-s) var(--orbit-space-base);
+  border-bottom: 1px solid var(--orbit-color-card-border-default);
+}
+
+.parameterOptionList {
+  list-style: none;
+  margin: 0;
+  padding: var(--orbit-space-xs) 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.parameterOption {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--orbit-space-s) var(--orbit-space-base);
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.parameterOption:hover,
+.parameterOption:focus-visible {
+  background: var(--orbit-color-bg-hover);
+  outline: none;
+}
+
+.parameterOption:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--orbit-color-focus-ring);
+}
+
+.parameterOptionEmpty {
+  padding: var(--orbit-space-s) var(--orbit-space-base);
+}
+
+.parameterIconTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--orbit-space-m);
+  height: var(--orbit-space-m);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--_bg, var(--orbit-color-bg-accent));
+  flex-shrink: 0;
+}
+
+.selectionRowDisabled {
+  background: var(--orbit-color-card-bg-accent);
+  color: var(--orbit-color-btn-secondary-fg-disabled);
+}
+
+.modalLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--orbit-color-bg-default);
+}
+
+.modalHeader,
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orbit-space-base);
+  padding: var(--orbit-space-m);
+  border-bottom: 1px solid var(--orbit-color-card-border-default);
+}
+
+.modalFooter {
+  border-top: 1px solid var(--orbit-color-card-border-default);
+  border-bottom: none;
+}
+
+.modalBody {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--orbit-space-m);
+}
+
+.modalToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orbit-space-m);
+  padding-bottom: var(--orbit-space-m);
+  margin-bottom: var(--orbit-space-base);
+  border-bottom: 1px solid var(--orbit-color-card-border-default);
+}
+
+.modalSearch {
+  width: min(100%, 520px);
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-s);
+}
+
+.processingLine {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-s);
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orbit-space-base);
+  min-height: var(--orbit-space-l);
+  padding: var(--orbit-space-none) var(--orbit-space-s);
+  border-radius: var(--orbit-radius-md);
+}
+
+.statusRowSuccess {
+  background: var(--orbit-color-status-low-bg-success);
+}
+
+.statusRowNeutral {
+  background: var(--orbit-color-status-low-bg-no-status);
+}
+
+.statusText,
+.statusTextSuccess {
+  font-family: var(--orbit-font-family-sans);
+  font-size: var(--orbit-text-sm);
+  line-height: var(--orbit-leading-relaxed);
+}
+
+.statusText {
+  color: var(--orbit-color-text-primary);
+}
+
+.statusTextSuccess {
+  color: var(--orbit-color-text-success);
+}
+
+.severityRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--orbit-space-s);
+}
+
+.resultButtonRow {
+  display: flex;
+  gap: var(--orbit-space-s);
+}
+
+.resultButtonRow > button {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.newAnalysisDivider {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-s);
+  width: 100%;
+  margin: var(--orbit-space-xs) 0;
+}
+
+.newAnalysisDivider::before,
+.newAnalysisDivider::after {
+  content: '';
+  flex: 1 1 0;
+  border-top: 1px solid var(--orbit-color-card-border-default);
+}
+
+.newAnalysisDivider > * {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .content {
+    padding: var(--orbit-space-base);
+  }
+
+  .modalToolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .modalSearch {
+    width: 100%;
+  }
+
+  .parameterRow,
+  .resultButtonRow {
+    flex-direction: column;
+  }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--orbit-space-s));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

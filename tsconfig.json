@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "paths": {
+      "@efficio/orbit": ["./packages/orbit/src/index.ts"],
+      "@efficio/orbit/*": ["./packages/orbit/*"]
+    }
+  },
+  "include": [
+    "packages/**/*.ts",
+    "packages/**/*.tsx",
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "test/**/*.ts",
+    "scripts/**/*.ts"
+  ],
+  "exclude": ["node_modules", "**/.next"]
+}
