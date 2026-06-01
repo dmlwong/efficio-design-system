@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Headings, Separator, Text } from '@efficio/orbit';
-import { DesignSystemShell } from '../DesignSystemShell';
 
 /* ─── Token data ─── */
 
@@ -291,33 +290,11 @@ function SubTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ─── Sidebar nav ─── */
-const NAV_ITEMS = [
-  { label: 'Primitive Colors', id: 'primitive-colors' },
-  { label: 'Swatches', id: 'swatches' },
-  { label: 'Semantic Colors', id: 'semantic-colors' },
-  { label: 'Status — High Contrast', id: 'status-high' },
-  { label: 'Status — Low Contrast', id: 'status-low' },
-  { label: 'Spacing', id: 'spacing' },
-  { label: 'Typography', id: 'typography' },
-  { label: 'Elevation', id: 'elevation' },
-  { label: 'Component Tokens', id: 'component-tokens' },
-];
-
 /* ─── Page ─── */
 
 export default function TokensPage() {
-  const [mode, setMode] = useState<'efficio' | 'orbit'>('efficio');
-
   return (
-    <DesignSystemShell
-      mode={mode}
-      onModeChange={setMode}
-      title="Design Tokens"
-      subtitle="All semantic tokens — switches with Efficio/Orbit toggle"
-      currentPage="tokens"
-      navItems={NAV_ITEMS}
-    >
+    <div style={{ maxWidth: 960 }}>
 
           {/* ── Primitive Colors ── */}
           <div id="primitive-colors" style={{ scrollMarginTop: 80 }}>
@@ -502,6 +479,6 @@ export default function TokensPage() {
               </div>
             ))}
           </div>
-    </DesignSystemShell>
+    </div>
   );
 }

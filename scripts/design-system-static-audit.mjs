@@ -42,6 +42,15 @@ const appAndComponentFiles = [
   ...walk('apps/prototypes/components', (file) => file.endsWith('.tsx') || file.endsWith('.ts')),
 ];
 
+// Per-component docs examples now live under components/<slug>/Example.tsx (plus
+// the foundations page). Assertions that used to read the single mega page.tsx
+// check this corpus instead, so they survive the split.
+const docsExampleFiles = walk('apps/docs/app/design-system/components', (file) => file.endsWith('Example.tsx'));
+if (existsSync(join(root, 'apps/docs/app/design-system/foundations/page.tsx'))) {
+  docsExampleFiles.push('apps/docs/app/design-system/foundations/page.tsx');
+}
+const docsExampleText = docsExampleFiles.map(read).join('\n');
+
 const checks = [];
 
 function check(name, pass, details = '') {
@@ -152,7 +161,7 @@ check(
     read('packages/orbit/src/feedback/InlineBanner.module.css').includes('.iconBox') &&
     read('packages/orbit/src/feedback/InlineBanner.module.css').includes('var(--orbit-inline-banner-icon-box-size)') &&
     read('packages/orbit/styles/tokens/components.css').includes('--orbit-color-status-high-bg-style-1') &&
-    read('apps/docs/app/design-system/page.tsx').includes('Neutral and Disabled'),
+    docsExampleText.includes('Neutral and Disabled'),
   'InlineBanner should have a tokenized icon box, a component-scoped Style 1 token, documented None outline behavior, and reference showcase coverage.'
 );
 
@@ -161,7 +170,7 @@ check(
   read('packages/orbit/src/feedback/Banner.tsx').includes('not the Figma "Feedback Banners" strip') &&
     read('packages/orbit/src/feedback/Banner.tsx').includes("export { Alert as Banner }") &&
     read('packages/orbit/src/feedback/index.ts').includes("export { Alert }") &&
-    read('apps/docs/app/design-system/page.tsx').includes('Alert Block'),
+    read('apps/docs/app/design-system/components/alert/Example.tsx').includes('<Alert'),
   'The multiline alert block should be exported as Alert while Banner remains a documented compatibility shim.'
 );
 
@@ -184,7 +193,7 @@ check(
   'PageHeader icon-only actions require a meaningful name',
   !read('packages/orbit/src/navigation/PageHeader.tsx').includes("'Page action'") &&
     read('packages/orbit/src/navigation/PageHeader.tsx').includes('const accessibleName = (ariaLabel || label).trim()') &&
-    !read('apps/docs/app/design-system/page.tsx').includes("label: '', icon:"),
+    !docsExampleText.includes("label: '', icon:"),
   'PageHeader should not fall back to a generic icon-only action label.'
 );
 
@@ -219,13 +228,16 @@ check(
     !read('scripts/build-design-md.ts').includes('Figma matches code tokens') &&
     read('scripts/build-design-md.ts').includes("status: 'skipped'") &&
     read('scripts/build-design-md.ts').includes('Figma validation skipped') &&
-    read('scripts/build-design-md.ts').includes('buildTypographyTokens'),
-  'build-design-md should not claim Figma parity when validation is skipped, and should emit structured typography tokens.'
+    // Token loading (incl. structured typography) was extracted to the shared
+    // scripts/lib/load-tokens.ts, consumed by build-design-md and build-skills.
+    read('scripts/lib/load-tokens.ts').includes('buildTypographyTokens'),
+  'build-design-md should not claim Figma parity when validation is skipped, and the shared token loader should emit structured typography tokens.'
 );
 
 const docsChromeText = [
   read('apps/docs/app/design-system/page.tsx'),
   read('apps/docs/app/design-system/tokens/page.tsx'),
+  read('apps/docs/app/design-system/layout.tsx'),
   existsSync(join(root, 'apps/docs/app/design-system/DesignSystemShell.tsx'))
     ? read('apps/docs/app/design-system/DesignSystemShell.tsx')
     : '',
@@ -277,7 +289,7 @@ check(
   'Spinner supports labelled and decorative loading',
   read('packages/orbit/src/indicators/Spinner.tsx').includes("role={decorative ? undefined : 'status'}") &&
     read('packages/orbit/src/indicators/Spinner.tsx').includes('aria-hidden={decorative || undefined}') &&
-    read('apps/docs/app/design-system/page.tsx').includes('Spinners'),
+    docsExampleText.includes('Spinners'),
   'Spinner should be usable as a labelled status or hidden decoration beside visible loading text.'
 );
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Headings, Text } from '@efficio/orbit';
 
 export type DesignSystemMode = 'efficio' | 'orbit';
@@ -25,6 +26,7 @@ export function DesignSystemShell({
   navItems,
   activeSection,
   onNavItemClick,
+  linkBase,
   sidebarRef,
   contentPadding = 'var(--orbit-space-0) var(--orbit-space-mega) var(--orbit-space-mega)',
   children,
@@ -33,10 +35,16 @@ export function DesignSystemShell({
   onModeChange: (mode: DesignSystemMode) => void;
   title: string;
   subtitle: string;
-  currentPage: 'components' | 'tokens';
+  currentPage: 'components' | 'tokens' | 'foundations';
   navGroups?: DesignSystemNavGroup[];
   navItems?: DesignSystemNavItem[];
   activeSection?: string;
+  /**
+   * When set, grouped nav items become real route links (`${linkBase}/${id}`)
+   * via next/link — client-side navigation that preserves this shell's parent
+   * layout (and its mode state). When unset, items are in-page anchor links.
+   */
+  linkBase?: string;
   onNavItemClick?: (id: string) => void;
   sidebarRef?: React.Ref<HTMLElement>;
   contentPadding?: string;
@@ -63,7 +71,7 @@ export function DesignSystemShell({
     fontSize: 'var(--orbit-text-sm)',
   });
 
-  const pageLinkStyle = (page: 'components' | 'tokens'): React.CSSProperties => ({
+  const pageLinkStyle = (page: 'components' | 'tokens' | 'foundations'): React.CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
     gap: 'var(--orbit-space-xs)',
@@ -153,12 +161,15 @@ export function DesignSystemShell({
         </div>
 
         <div style={{ padding: 'var(--orbit-space-none) var(--orbit-space-s)', marginBottom: 'var(--orbit-space-base)' }}>
-          <a href="/design-system" aria-current={currentPage === 'components' ? 'page' : undefined} style={pageLinkStyle('components')}>
+          <Link href="/design-system" aria-current={currentPage === 'components' ? 'page' : undefined} style={pageLinkStyle('components')}>
             Components
-          </a>
-          <a href="/design-system/tokens" aria-current={currentPage === 'tokens' ? 'page' : undefined} style={pageLinkStyle('tokens')}>
+          </Link>
+          <Link href="/design-system/tokens" aria-current={currentPage === 'tokens' ? 'page' : undefined} style={pageLinkStyle('tokens')}>
             Design Tokens
-          </a>
+          </Link>
+          <Link href="/design-system/foundations" aria-current={currentPage === 'foundations' ? 'page' : undefined} style={pageLinkStyle('foundations')}>
+            Foundations
+          </Link>
         </div>
 
         <div style={{ width: 'calc(var(--orbit-sidenav-width) - var(--orbit-space-l))', margin: 'var(--orbit-space-none) auto var(--orbit-space-base)', borderBottom: 'var(--orbit-space-px) solid var(--orbit-color-sidenav-divider)' }} />
@@ -181,6 +192,19 @@ export function DesignSystemShell({
               </div>
               {group.items.map((item) => {
                 const active = activeSection === item.id;
+                if (linkBase) {
+                  return (
+                    <Link
+                      key={item.id}
+                      href={`${linkBase}/${item.id}`}
+                      className="ds-shell-nav-link"
+                      data-section-id={item.id}
+                      style={navLinkStyle(active)}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                }
                 return (
                   <a
                     key={item.id}

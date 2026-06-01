@@ -19,7 +19,12 @@
     "pack:orbit": "npm pack ./packages/orbit",
     "test:components": "vitest run",
     "test:components:watch": "vitest",
-    "build:design-md": "tsx scripts/build-design-md.ts"
+    "build:design-md": "tsx scripts/build-design-md.ts",
+    "build:manifest": "tsx scripts/build-manifest.ts",
+    "build:skills": "tsx scripts/build-skills.ts",
+    "build:docs-data": "tsx scripts/build-docs-data.ts",
+    "build:design": "npm run build:manifest && npm run build:design-md -- --skip-figma && npm run build:skills && npm run build:docs-data",
+    "check:design": "npm run build:manifest -- --check && npm run build:design-md -- --skip-figma --check && npm run build:skills -- --check && npm run build:docs-data -- --check"
   },
   "overrides": {
     "postcss": "^8.5.10"
