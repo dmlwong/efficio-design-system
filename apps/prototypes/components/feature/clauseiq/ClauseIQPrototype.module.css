@@ -308,12 +308,14 @@
 
 .modalSearch {
   width: min(100%, 520px);
+  min-width: 0;
 }
 
 .tabs {
   display: flex;
   align-items: center;
-  gap: var(--orbit-space-s);
+  flex: 0 0 367px;
+  width: 367px;
 }
 
 .processingLine {

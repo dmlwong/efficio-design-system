@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import {
   Avatar,
   AvatarStack,
@@ -79,7 +79,7 @@ const NAV_GROUPS: { group: string; items: { label: string; id: string }[] }[] = 
       { label: 'Icon Buttons', id: 'icon-buttons' },
       { label: 'Tab Buttons', id: 'tab-buttons' },
       { label: 'Quick Filters', id: 'quick-filters' },
-      { label: 'MultiState Buttons', id: 'multistate-buttons' },
+      { label: 'Grouped Buttons', id: 'multistate-buttons' },
     ],
   },
   {
@@ -141,6 +141,26 @@ const NAV_GROUPS: { group: string; items: { label: string; id: string }[] }[] = 
 ];
 
 const ALL_IDS = NAV_GROUPS.flatMap((g) => g.items.map((i) => i.id));
+const SECTION_SCROLL_MARGIN_TOP = 96;
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+function getHashSectionId() {
+  if (typeof window === 'undefined') return null;
+  const id = decodeURIComponent(window.location.hash.replace(/^#/, ''));
+  return ALL_IDS.includes(id) ? id : null;
+}
+
+function setSectionHash(id: string, mode: 'push' | 'replace') {
+  if (typeof window === 'undefined') return;
+  const hash = `#${encodeURIComponent(id)}`;
+  if (window.location.hash === hash) return;
+  const url = `${window.location.pathname}${window.location.search}${hash}`;
+  if (mode === 'push') {
+    window.history.pushState(null, '', url);
+    return;
+  }
+  window.history.replaceState(null, '', url);
+}
 
 interface ShowcaseTableRow {
   id: string;
@@ -183,7 +203,7 @@ function DocSection({
         marginBottom: 64,
         paddingBottom: 48,
         borderBottom: '1px solid var(--orbit-color-border-default)',
-        scrollMarginTop: 24,
+        scrollMarginTop: SECTION_SCROLL_MARGIN_TOP,
       }}
     >
       <Headings size="Heading 3">{title}</Headings>
@@ -249,20 +269,55 @@ export default function DesignSystemPage() {
   const [tablePage, setTablePage] = useState(1);
   const [tableSort, setTableSort] = useState<'asc' | 'desc'>('asc');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [multiStateActive, setMultiStateActive] = useState('overview');
+  const [multiStateActive, setMultiStateActive] = useState('mine');
   const [mode, setMode] = useState<'efficio' | 'orbit'>('efficio');
 
   /* --- active sidebar section tracking --- */
   const [activeSection, setActiveSection] = useState<string>(ALL_IDS[0]);
   const [isUserClicking, setIsUserClicking] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
+  const isProgrammaticScrollRef = useRef(false);
+
+  // Honour direct hash links and browser back/forward navigation.
+  useIsomorphicLayoutEffect(() => {
+    const syncFromHash = () => {
+      const id = getHashSectionId();
+      if (!id) return;
+      isProgrammaticScrollRef.current = true;
+      setIsUserClicking(true);
+      setActiveSection(id);
+      requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      });
+      window.setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+        setIsUserClicking(false);
+      }, 800);
+    };
+
+    syncFromHash();
+    const frameId = window.requestAnimationFrame(syncFromHash);
+    const timeoutId = window.setTimeout(syncFromHash, 250);
+    const startupSyncId = window.setInterval(syncFromHash, 100);
+    const stopStartupSyncId = window.setTimeout(() => window.clearInterval(startupSyncId), 2000);
+    window.addEventListener('hashchange', syncFromHash);
+    window.addEventListener('popstate', syncFromHash);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.clearTimeout(timeoutId);
+      window.clearInterval(startupSyncId);
+      window.clearTimeout(stopStartupSyncId);
+      window.removeEventListener('hashchange', syncFromHash);
+      window.removeEventListener('popstate', syncFromHash);
+    };
+  }, []);
 
   // Scroll the active sidebar link into view when active section changes
   useEffect(() => {
     if (!sidebarRef.current) return;
     const activeLink = sidebarRef.current.querySelector(`[data-section-id="${activeSection}"]`) as HTMLElement;
     if (activeLink) {
-      activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      activeLink.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }, [activeSection]);
 
@@ -271,7 +326,7 @@ export default function DesignSystemPage() {
     const observer = new IntersectionObserver(
       (entries) => {
         // Don't override active section while user is clicking (scrolling to target)
-        if (isUserClicking) return;
+        if (isUserClicking || isProgrammaticScrollRef.current) return;
 
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length > 0) {
@@ -280,7 +335,9 @@ export default function DesignSystemPage() {
             const bi = ALL_IDS.indexOf(b.target.id);
             return ai - bi;
           });
-          setActiveSection(sorted[0].target.id);
+          const nextSection = sorted[0].target.id;
+          setActiveSection(nextSection);
+          setSectionHash(nextSection, 'replace');
         }
       },
       { rootMargin: '-80px 0px -60% 0px', threshold: 0 },
@@ -297,11 +354,16 @@ export default function DesignSystemPage() {
   // Handle sidebar link click — disable observer briefly so it doesn't fight
   const handleNavClick = (id: string) => {
     setActiveSection(id);
+    isProgrammaticScrollRef.current = true;
     setIsUserClicking(true);
+    setSectionHash(id, 'push');
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
     // Re-enable observer after scroll completes
-    setTimeout(() => setIsUserClicking(false), 800);
+    setTimeout(() => {
+      isProgrammaticScrollRef.current = false;
+      setIsUserClicking(false);
+    }, 800);
   };
 
   return (
@@ -491,7 +553,7 @@ export default function DesignSystemPage() {
         </DocSection>
 
         {/* Tab Buttons */}
-        <DocSection id="tab-buttons" title="Tab Buttons" description="Segmented navigation tabs with active, hover, and disabled states.">
+        <DocSection id="tab-buttons" title="Tab Buttons" description="Underline navigation tabs for page headers and content sections.">
           <Row>
             {['Overview', 'Details', 'History'].map((tab, i) => (
               <TabButton key={tab} active={activeTab === i} onClick={() => setActiveTab(i)}>
@@ -540,15 +602,25 @@ export default function DesignSystemPage() {
           </Row>
         </DocSection>
 
-        {/* MultiState Buttons */}
-        <DocSection id="multistate-buttons" title="MultiState Buttons" description="Grouped toggle buttons for switching between related views.">
-          <Row label="Individual States">
-            <MultiStateButton value="selected" label="MultiState Button" selected />
-            <MultiStateButton value="default" label="MultiState Button" />
-            <MultiStateButton value="disabled" label="MultiState Button" disabled />
+        {/* Grouped Buttons */}
+        <DocSection id="multistate-buttons" title="Grouped Buttons" description="Live-matched segmented button groups for switching between related views.">
+          <Row label="Live Mine / Team">
+            <div style={{ width: 367 }}>
+              <MultiStateGroup value={multiStateActive} onValueChange={setMultiStateActive} ariaLabel="Initiative ownership" fullWidth>
+                <MultiStateButton value="mine" label="Mine" />
+                <MultiStateButton value="team" label="Team" />
+              </MultiStateGroup>
+            </div>
+          </Row>
+          <Row label="States">
+            <MultiStateGroup defaultValue="selected">
+              <MultiStateButton value="selected" label="Selected" />
+              <MultiStateButton value="inactive" label="Inactive" />
+              <MultiStateButton value="disabled" label="Disabled" disabled />
+            </MultiStateGroup>
           </Row>
           <Row label="MultiState Group (interactive)">
-            <MultiStateGroup value={multiStateActive} onValueChange={setMultiStateActive}>
+            <MultiStateGroup defaultValue="overview">
               {['Overview', 'Details', 'Analytics', 'Settings', 'Export'].map((item) => (
                 <MultiStateButton
                   key={item}
@@ -1066,7 +1138,16 @@ export default function DesignSystemPage() {
 
         {/* Page Header */}
         <DocSection id="page-header" title="Page Header" description="Top-level page headers with titles, actions, tabs, and module presets.">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div
+            style={{
+              '--orbit-page-header-position': 'relative',
+              '--orbit-page-header-top': 'auto',
+              '--orbit-page-header-z-index': '0',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+            } as React.CSSProperties}
+          >
             {/* 1. Main Header */}
             <PageHeader
               type="main"
@@ -1209,34 +1290,45 @@ export default function DesignSystemPage() {
 
         {/* Side Nav */}
         <DocSection id="side-nav" title="Side Nav" description="Application-level sidebar navigation with sections, items, and work history.">
-          <div style={{ height: 700, border: '1px solid var(--orbit-color-border-default)', borderRadius: 'var(--orbit-radius-md)', overflow: 'hidden' }}>
+          <div data-theme="orbit" style={{ height: '100vh', minHeight: 760, overflow: 'hidden' }}>
             <SideNav
-              appName="Efficio Orbit"
-              clientName="Yorkshire Water"
+              appName="Connected Platform"
+              clientName="Aarke"
               navItems={[
-                { id: 'notifications', icon: '\uf0f3', label: 'Notifications', badge: 1 },
+                { id: 'notifications', icon: '\uf0f3', label: 'Notifications' },
                 { id: 'home', icon: '\uf015', label: 'Home', active: true },
                 { id: 'data-tracker-insights', icon: '\uf1c0', label: 'Data Tracker & Insights' },
-                { id: 'document-search', icon: '\uf15b', label: 'Document Search' },
+                { id: 'content-search', icon: '\uf15b', label: 'Content Search' },
               ]}
               sections={[
-                { id: 'identify', label: 'Identify', color: 'var(--orbit-color-header-identify-from)' },
-                { id: 'deliver', label: 'Deliver', color: 'var(--orbit-color-header-deliver-from)', expanded: true, items: [
-                  { id: 'project-management', icon: '\uf135', label: 'Project Management', active: true },
-                  { id: 'route-to-market', icon: '\uf3c5', label: 'Route to Market', muted: true },
-                  { id: 'sourcing-execution', icon: '\uf643', label: 'Sourcing Execution', muted: true },
+                { id: 'identify', label: 'Identify', color: 'var(--orbit-color-header-identify-from)', items: [
+                  { id: 'procurement-planning', icon: '\uf135', label: 'Procurement Planning' },
                 ]},
-                { id: 'sustain', label: 'Sustain', color: 'var(--orbit-color-header-sustain-from)' },
+                { id: 'deliver', label: 'Deliver', color: 'var(--orbit-color-header-deliver-from)', items: [
+                  { id: 'project-management', icon: '\uf135', label: 'Project Management' },
+                  { id: 'sourcing-execution', icon: '\uf643', label: 'Sourcing Execution' },
+                ]},
+                { id: 'sustain', label: 'Sustain', color: 'var(--orbit-color-header-sustain-from)', items: [
+                  { id: 'compliance-monitoring', icon: '\uf7d9', label: 'Compliance Monitoring' },
+                ]},
               ]}
               workItems={[
-                { id: 'research-agent', title: 'Research Agent (2)', subtitle: '1min ago' },
-                { id: 'route-recommendation', title: 'Route Recommendation', subtitle: '2h ago | Legal Tech Platform Up...' },
-                { id: 'spend-guard', title: 'Spend Guard', subtitle: '3h ago | Legal Tech Platform Up...' },
-                { id: 'rfp-analytics', title: 'RFP Analytics', subtitle: '6h ago | Fleet Cost Optimitisatio...' },
-                { id: 'clause-iq', title: 'Clause IQ', subtitle: '1d ago | Fleet Cost Optimitisatio...' },
+                { id: 'initi-to-check', title: 'ClauseIQ', subtitle: '1w ago | InitiToCheckClauseIQ' },
+                { id: 'test-init-part-05', title: 'ClauseIQ', subtitle: '2mo ago | TestInitPart05' },
+                { id: 'created-in-cp', title: 'ClauseIQ', subtitle: '3mo ago | created in cp' },
+                { id: 'initiative-from-cp-part-12', title: 'MarketIQ', subtitle: '3mo ago | InitiativeFromCPPart12' },
+                { id: 'new-init-1612', title: 'ClauseIQ', subtitle: '3mo ago | NewInit1612' },
+                { id: 'init-to-check-save-doc', title: 'ClauseIQ', subtitle: '3mo ago | InitiTocheckSaveDoc' },
+                { id: 'init-again-monday', title: 'ClauseIQ', subtitle: '3mo ago | initagainmonday' },
+                { id: 'test-clause-iq-part-01', title: 'MarketIQ', subtitle: '3mo ago | TestClauseIQPart01' },
+                { id: 'last-run-for-research-05', title: 'ClauseIQ', subtitle: '3mo ago | LastRunForResearch05' },
+                { id: 'test-clause-coelho', title: 'MarketIQ', subtitle: '3mo ago | test clause coelho' },
+                { id: 'for-video-share-doc-01', title: 'MarketIQ', subtitle: '3mo ago | ForVideoShareDoc01' },
+                { id: 'for-video-share-doc-02', title: 'MarketIQ', subtitle: '3mo ago | ForVideoShareDoc02' },
+                { id: 'without-savings-06', title: 'ClauseIQ', subtitle: '3mo ago | WithoutSavings06' },
               ]}
-              userName="Chris Hurley"
-              userInitials="CH"
+              userName="Derek Wong"
+              userInitials="DW"
             />
           </div>
         </DocSection>

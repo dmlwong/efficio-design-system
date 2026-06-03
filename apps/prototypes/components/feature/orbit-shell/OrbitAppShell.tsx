@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { SideNav } from '@efficio/orbit';
 import styles from './OrbitAppShell.module.css';
 
-type OrbitNavItem = 'Notifications' | 'Data Tracker & Insights' | 'Home' | 'Content Search';
+type OrbitNavItem = 'Notifications' | 'Home' | 'Content Search';
 
 interface OrbitAppShellProps {
   children: React.ReactNode;
@@ -12,9 +12,8 @@ interface OrbitAppShellProps {
 }
 
 const navItems = [
-  { id: 'notifications', icon: '\uf0f3', label: 'Notifications', badge: 5 },
+  { id: 'notifications', icon: '\uf0f3', label: 'Notifications' },
   { id: 'home', icon: '\uf015', label: 'Home' },
-  { id: 'data-tracker-insights', icon: '\uf1c0', label: 'Data Tracker & Insights' },
   { id: 'content-search', icon: '\uf15b', label: 'Content Search' },
 ];
 
@@ -42,46 +41,31 @@ const sections = [
   },
 ];
 
-const workItems = [
-  { id: 'clauseiq-latest', title: 'ClauseIQ', subtitle: '5d ago | TestClientTaxonomyCreatedBy' },
-  { id: 'marketiq', title: 'MarketIQ', subtitle: '1w ago' },
-  { id: 'clauseiq-previous', title: 'ClauseIQ', subtitle: '1w ago | dfgdfgsdfg' },
-];
-
 export const OrbitAppShell: React.FC<OrbitAppShellProps> = ({
   children,
   activeItem = 'Home',
 }) => {
   const [currentActiveItem, setCurrentActiveItem] = useState<OrbitNavItem | undefined>(activeItem);
-  const [currentWorkItem, setCurrentWorkItem] = useState<string | undefined>();
 
   useEffect(() => {
     setCurrentActiveItem(activeItem);
-    setCurrentWorkItem(undefined);
   }, [activeItem]);
 
   return (
     <div data-theme="orbit" className={styles.shell}>
       <SideNav
         appName="Connected Platform"
-        clientName="Yorkshire Water"
+        clientName="AstraZeneca"
         navItems={navItems.map((item) => ({
           ...item,
           active: item.label === currentActiveItem,
           onClick: () => {
             setCurrentActiveItem(item.label as OrbitNavItem);
-            setCurrentWorkItem(undefined);
           },
         }))}
         sections={sections}
-        workItems={workItems.map((item) => ({
-          ...item,
-          active: item.id === currentWorkItem,
-          onClick: () => {
-            setCurrentWorkItem(item.id);
-            setCurrentActiveItem(undefined);
-          },
-        }))}
+        showWorkRegion={false}
+        showProfile={false}
         userName="Derek Wong"
         userInitials="DW"
       />

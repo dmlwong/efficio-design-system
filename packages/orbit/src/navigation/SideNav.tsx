@@ -14,11 +14,14 @@ export interface SideNavAction {
   ariaLabel?: string;
 }
 
+export type SideNavPreviewState = 'hover';
+
 export interface SideNavItem extends SideNavAction {
   icon: string;
   label: string;
   active?: boolean;
   badge?: number;
+  previewState?: SideNavPreviewState;
 }
 
 export interface SideNavSubItem extends SideNavAction {
@@ -26,6 +29,7 @@ export interface SideNavSubItem extends SideNavAction {
   label: string;
   active?: boolean;
   muted?: boolean;
+  previewState?: SideNavPreviewState;
 }
 
 export interface SideNavSection extends SideNavAction {
@@ -34,12 +38,14 @@ export interface SideNavSection extends SideNavAction {
   expanded?: boolean;
   showChevron?: boolean;
   items?: SideNavSubItem[];
+  previewState?: SideNavPreviewState;
 }
 
 export interface SideNavWorkItem extends SideNavAction {
   title: string;
   subtitle: string;
   active?: boolean;
+  previewState?: SideNavPreviewState;
 }
 
 export interface SideNavProps {
@@ -51,10 +57,13 @@ export interface SideNavProps {
   navItems?: SideNavItem[];
   sections?: SideNavSection[];
   workItems?: SideNavWorkItem[];
+  showWorkRegion?: boolean;
   workHeading?: string;
   workSearchIcon?: string;
   workSearchAriaLabel?: string;
   onWorkSearch?: () => void;
+  showProfile?: boolean;
+  showDividers?: boolean;
   userName: string;
   userInitials: string;
   profileMenuIcon?: string;
@@ -119,14 +128,21 @@ function RowPrimitive({
   );
 }
 
-function NavItemRow({ icon, label, active, badge, href, onClick, ariaLabel }: SideNavItem) {
+function NavItemRow({ icon, label, active, badge, previewState, href, onClick, ariaLabel }: SideNavItem) {
   return (
     <RowPrimitive
       href={href}
       onClick={onClick}
       ariaLabel={ariaLabel}
       ariaCurrent={active ? 'page' : undefined}
-      className={clsx(styles.row, styles.navRow, active && styles.active, (href || onClick) && styles.interactive)}
+      className={clsx(
+        styles.row,
+        styles.navRow,
+        styles.hoverable,
+        active && styles.active,
+        previewState === 'hover' && styles.previewHover,
+        (href || onClick) && styles.interactive,
+      )}
     >
       <span className={styles.iconSlot} aria-hidden="true">
         <FaIcon icon={icon} size={12} color="currentColor" />
@@ -173,7 +189,13 @@ function SectionRow({
     return (
       <button
         type="button"
-        className={clsx(styles.row, styles.sectionRow, styles.interactive)}
+        className={clsx(
+          styles.row,
+          styles.sectionRow,
+          styles.hoverable,
+          section.previewState === 'hover' && styles.previewHover,
+          styles.interactive,
+        )}
         aria-expanded={hasChildren ? expanded : undefined}
         aria-label={section.ariaLabel}
         onClick={handleToggle}
@@ -188,14 +210,20 @@ function SectionRow({
       href={section.href}
       onClick={section.onClick}
       ariaLabel={section.ariaLabel}
-      className={clsx(styles.row, styles.sectionRow, (section.href || section.onClick) && styles.interactive)}
+      className={clsx(
+        styles.row,
+        styles.sectionRow,
+        styles.hoverable,
+        section.previewState === 'hover' && styles.previewHover,
+        (section.href || section.onClick) && styles.interactive,
+      )}
     >
       {rowContents}
     </RowPrimitive>
   );
 }
 
-function SubItemRow({ icon, label, active, muted, href, onClick, ariaLabel }: SideNavSubItem) {
+function SubItemRow({ icon, label, active, muted, previewState, href, onClick, ariaLabel }: SideNavSubItem) {
   return (
     <RowPrimitive
       href={href}
@@ -205,8 +233,10 @@ function SubItemRow({ icon, label, active, muted, href, onClick, ariaLabel }: Si
       className={clsx(
         styles.row,
         styles.subItem,
+        styles.hoverable,
         active && styles.active,
         muted && styles.muted,
+        previewState === 'hover' && styles.previewHover,
         (href || onClick) && styles.interactive,
       )}
     >
@@ -218,14 +248,20 @@ function SubItemRow({ icon, label, active, muted, href, onClick, ariaLabel }: Si
   );
 }
 
-function WorkItemRow({ title, subtitle, active, href, onClick, ariaLabel }: SideNavWorkItem) {
+function WorkItemRow({ title, subtitle, active, previewState, href, onClick, ariaLabel }: SideNavWorkItem) {
   return (
     <RowPrimitive
       href={href}
       onClick={onClick}
       ariaLabel={ariaLabel}
       ariaCurrent={active ? 'page' : undefined}
-      className={clsx(styles.workItem, active && styles.active, (href || onClick) && styles.interactive)}
+      className={clsx(
+        styles.workItem,
+        styles.hoverable,
+        active && styles.active,
+        previewState === 'hover' && styles.previewHover,
+        (href || onClick) && styles.interactive,
+      )}
     >
       <span className={styles.workTitle}>{title}</span>
       <span className={styles.workSubtitle}>{subtitle}</span>
@@ -244,10 +280,13 @@ export const SideNav: React.FC<SideNavProps> = ({
   navItems = EMPTY_NAV_ITEMS,
   sections = EMPTY_SECTIONS,
   workItems = EMPTY_WORK_ITEMS,
+  showWorkRegion = true,
   workHeading = 'My Work',
   workSearchIcon = '\uf002',
   workSearchAriaLabel = 'Search work',
   onWorkSearch,
+  showProfile = true,
+  showDividers = true,
   userName,
   userInitials,
   profileMenuIcon = '\uf141',
@@ -303,7 +342,7 @@ export const SideNav: React.FC<SideNavProps> = ({
         </div>
       </div>
 
-      <div className={styles.divider} />
+      {showDividers && <div className={styles.divider} />}
 
       <div className={styles.sectionList}>
         {sections.map((section) => {
@@ -328,51 +367,55 @@ export const SideNav: React.FC<SideNavProps> = ({
         })}
       </div>
 
-      <div className={styles.divider} />
+      {showWorkRegion && (
+        <>
+          <div className={styles.workRegion}>
+            <div className={clsx(styles.workHeader, showDividers && styles.workHeaderDivided)}>
+              <div className={styles.workHeading}>
+                <span>{workHeading}</span>
+              </div>
+              {onWorkSearch ? (
+                <button type="button" className={styles.workTools} aria-label={workSearchAriaLabel} onClick={onWorkSearch}>
+                  <span className={styles.iconSlot} aria-hidden="true">
+                    <FaIcon icon={workSearchIcon} size={12} color="currentColor" />
+                  </span>
+                </button>
+              ) : (
+                <span className={styles.workTools} aria-hidden="true">
+                  <span className={styles.iconSlot}>
+                    <FaIcon icon={workSearchIcon} size={12} color="currentColor" />
+                  </span>
+                </span>
+              )}
+            </div>
 
-      <div className={styles.workRegion}>
-        <div className={styles.workHeader}>
-          <div className={styles.workHeading}>
-            <span>{workHeading}</span>
+            <div className={styles.workList}>
+              {workItems.map((item) => (
+                <WorkItemRow key={item.id} {...item} />
+              ))}
+            </div>
           </div>
-          {onWorkSearch ? (
-            <button type="button" className={styles.workTools} aria-label={workSearchAriaLabel} onClick={onWorkSearch}>
-              <span className={styles.iconSlot} aria-hidden="true">
-                <FaIcon icon={workSearchIcon} size={12} color="currentColor" />
-              </span>
-            </button>
-          ) : (
-            <span className={styles.workTools} aria-hidden="true">
-              <span className={styles.iconSlot}>
-                <FaIcon icon={workSearchIcon} size={12} color="currentColor" />
-              </span>
-            </span>
-          )}
-        </div>
+        </>
+      )}
 
-        <div className={styles.workList}>
-          {workItems.map((item) => (
-            <WorkItemRow key={item.id} {...item} />
-          ))}
+      {showProfile && (
+        <div className={styles.profile}>
+          {showDividers && <div className={styles.profileDivider} />}
+          <div className={styles.profileContent}>
+            <span className={styles.avatar} aria-hidden="true">{userInitials}</span>
+            <span className={styles.profileName}>{userName}</span>
+            {onProfileMenu ? (
+              <button type="button" className={styles.profileMenu} aria-label={profileMenuAriaLabel} onClick={onProfileMenu}>
+                <FaIcon icon={profileMenuIcon} size={10} color="currentColor" />
+              </button>
+            ) : (
+              <span className={styles.profileMenu} aria-hidden="true">
+                <FaIcon icon={profileMenuIcon} size={10} color="currentColor" />
+              </span>
+            )}
+          </div>
         </div>
-      </div>
-
-      <div className={styles.profile}>
-        <div className={styles.profileDivider} />
-        <div className={styles.profileContent}>
-          <span className={styles.avatar} aria-hidden="true">{userInitials}</span>
-          <span className={styles.profileName}>{userName}</span>
-          {onProfileMenu ? (
-            <button type="button" className={styles.profileMenu} aria-label={profileMenuAriaLabel} onClick={onProfileMenu}>
-              <FaIcon icon={profileMenuIcon} size={10} color="currentColor" />
-            </button>
-          ) : (
-            <span className={styles.profileMenu} aria-hidden="true">
-              <FaIcon icon={profileMenuIcon} size={10} color="currentColor" />
-            </span>
-          )}
-        </div>
-      </div>
+      )}
     </aside>
   );
 };

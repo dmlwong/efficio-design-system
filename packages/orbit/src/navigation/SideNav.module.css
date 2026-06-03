@@ -4,18 +4,39 @@
   --sidenav-avatar-size: var(--orbit-sidenav-avatar-size);
   --sidenav-row-height: var(--orbit-space-xl);
   --sidenav-row-gap: var(--orbit-sidenav-row-gap);
-  --sidenav-row-font-size: var(--orbit-text-base);
+  --sidenav-row-font-size: var(--orbit-sidenav-row-font-size, var(--orbit-text-base));
+  --sidenav-app-font-size: var(--orbit-sidenav-app-font-size, var(--sidenav-row-font-size));
+  --sidenav-client-font-size: var(--orbit-sidenav-client-font-size, var(--sidenav-row-font-size));
   --sidenav-row-line-height: var(--orbit-leading-relaxed);
   --sidenav-icon-slot: var(--orbit-space-l);
   --sidenav-header-gap: var(--orbit-space-s);
-  --sidenav-header-padding: 0 var(--orbit-sidenav-header-padding-inline) var(--orbit-sidenav-header-padding-block-end);
-  --sidenav-list-padding: 0 var(--orbit-space-s);
-  --sidenav-section-padding: 0 var(--orbit-space-base);
+  --sidenav-product-gap: var(--orbit-sidenav-product-gap, 0);
+  --sidenav-header-padding: var(--orbit-sidenav-header-padding-block-start, 0) var(--orbit-sidenav-header-padding-inline) var(--orbit-sidenav-header-padding-block-end);
+  --sidenav-nav-list-padding-inline: var(--orbit-sidenav-nav-list-padding-inline, var(--orbit-space-s));
+  --sidenav-section-list-padding-inline: var(--orbit-sidenav-section-list-padding-inline, var(--orbit-space-base));
+  --sidenav-work-list-padding-inline: var(--orbit-sidenav-work-list-padding-inline, var(--orbit-space-none));
+  --sidenav-list-padding: 0 var(--sidenav-nav-list-padding-inline);
+  --sidenav-nav-row-padding-inline: var(--orbit-sidenav-nav-row-padding-inline, var(--orbit-space-s));
+  --sidenav-section-padding: 0 var(--sidenav-section-list-padding-inline);
+  --sidenav-section-row-radius: var(--orbit-sidenav-section-row-radius, var(--orbit-sidenav-nav-row-radius));
+  --sidenav-subitem-gap: var(--orbit-sidenav-subitem-gap, var(--orbit-space-xxs));
   --sidenav-profile-padding: 0 var(--orbit-sidenav-profile-padding-inline);
   --sidenav-padding-top: var(--orbit-sidenav-padding-top);
   --sidenav-profile-padding-bottom: var(--orbit-sidenav-profile-padding-bottom);
-  --sidenav-work-title-size: var(--orbit-text-base);
-  --sidenav-work-subtitle-size: var(--orbit-text-sm);
+  --sidenav-work-header-padding: var(--orbit-sidenav-work-header-padding, var(--sidenav-section-padding));
+  --sidenav-work-list-padding: var(--orbit-sidenav-work-list-padding, 0);
+  --sidenav-work-list-gap: var(--orbit-sidenav-work-list-gap, var(--orbit-space-s));
+  --sidenav-work-item-padding: var(--orbit-sidenav-work-item-padding, var(--orbit-space-s) var(--orbit-space-base) var(--orbit-space-s) var(--orbit-sidenav-work-item-padding-left));
+  --sidenav-work-item-gap: var(--orbit-sidenav-work-item-gap, var(--orbit-space-xxs));
+  --sidenav-work-heading-line-height: var(--orbit-sidenav-work-heading-line-height, var(--sidenav-row-line-height));
+  --sidenav-work-title-size: var(--orbit-sidenav-work-title-size, var(--orbit-text-base));
+  --sidenav-work-title-line-height: var(--orbit-sidenav-work-title-line-height, var(--sidenav-row-line-height));
+  --sidenav-work-subtitle-size: var(--orbit-sidenav-work-subtitle-size, var(--orbit-text-sm));
+  --sidenav-work-subtitle-line-height: var(--orbit-sidenav-work-subtitle-line-height, var(--orbit-leading-tight));
+  --sidenav-profile-min-height: var(--orbit-sidenav-profile-min-height, auto);
+  --sidenav-profile-content-min-height: var(--orbit-sidenav-profile-content-min-height, calc(var(--sidenav-avatar-size) + var(--orbit-space-base)));
+  --sidenav-profile-content-padding: var(--orbit-sidenav-profile-content-padding, var(--sidenav-profile-padding));
+  --sidenav-profile-content-gap: var(--orbit-sidenav-profile-content-gap, var(--sidenav-header-gap));
   --sidenav-divider-width: calc(var(--sidenav-width) - var(--orbit-space-xl));
 
   position: sticky;
@@ -76,6 +97,7 @@
   min-width: 0;
   flex-direction: column;
   justify-content: center;
+  gap: var(--sidenav-product-gap);
   height: var(--sidenav-logo-size);
 }
 
@@ -92,7 +114,7 @@
 
 .appName {
   color: var(--orbit-color-white);
-  font-size: var(--sidenav-row-font-size);
+  font-size: var(--sidenav-app-font-size);
   font-weight: var(--orbit-sidenav-app-name-font-weight);
   line-height: var(--orbit-leading-tight);
 }
@@ -102,7 +124,7 @@
   align-items: center;
   min-width: 0;
   color: var(--orbit-color-sidenav-muted);
-  font-size: var(--sidenav-row-font-size);
+  font-size: var(--sidenav-client-font-size);
   line-height: var(--orbit-leading-tight);
 }
 
@@ -167,8 +189,9 @@ button.row {
   cursor: pointer;
 }
 
-.interactive:hover::before,
-.active::before {
+.hoverable:hover::before,
+.active::before,
+.previewHover::before {
   background-color: var(--orbit-color-sidenav-active-bg);
 }
 
@@ -181,7 +204,7 @@ button.row {
   --sidenav-hover-surface-radius: var(--orbit-sidenav-nav-row-radius);
 
   gap: var(--orbit-sidenav-nav-row-gap);
-  padding: var(--orbit-sidenav-nav-row-padding-block) var(--orbit-space-s);
+  padding: var(--orbit-sidenav-nav-row-padding-block) var(--sidenav-nav-row-padding-inline);
   border-radius: var(--orbit-sidenav-nav-row-radius);
 }
 
@@ -246,12 +269,13 @@ button.row {
 }
 
 .sectionRow {
-  --sidenav-hover-surface-start: calc(-1 * var(--orbit-space-s));
-  --sidenav-hover-surface-end: calc(-1 * var(--orbit-space-s));
+  --sidenav-hover-surface-start: calc(var(--sidenav-nav-list-padding-inline) - var(--sidenav-section-list-padding-inline));
+  --sidenav-hover-surface-end: calc(var(--sidenav-nav-list-padding-inline) - var(--sidenav-section-list-padding-inline));
   --sidenav-hover-surface-radius: var(--orbit-sidenav-nav-row-radius);
 
   gap: var(--orbit-space-base);
   justify-content: space-between;
+  border-radius: var(--sidenav-section-row-radius);
   padding: 0 var(--orbit-sidenav-section-row-padding-inline);
 }
 
@@ -280,7 +304,7 @@ button.row {
   --sidenav-hover-surface-end: calc(-1 * var(--orbit-space-s));
   --sidenav-hover-surface-radius: var(--orbit-sidenav-nav-row-radius);
 
-  gap: var(--orbit-space-xxs);
+  gap: var(--sidenav-subitem-gap);
   width: calc(100% - var(--orbit-sidenav-subitem-offset));
   margin-left: var(--orbit-sidenav-subitem-offset);
   padding: 0 var(--orbit-sidenav-subitem-padding-inline);
@@ -307,8 +331,11 @@ button.row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sidenav-section-padding);
-  margin-bottom: var(--orbit-space-s);
+  padding: var(--sidenav-work-header-padding);
+}
+
+.workHeaderDivided {
+  border-top: 1px solid var(--orbit-sidenav-work-header-border-color, var(--orbit-color-sidenav-divider));
 }
 
 .workHeading,
@@ -316,6 +343,19 @@ button.row {
   display: flex;
   align-items: center;
   gap: var(--orbit-space-xs);
+}
+
+.workTools {
+  justify-content: flex-start;
+  width: var(--orbit-sidenav-work-tool-width, var(--sidenav-icon-slot));
+  height: var(--orbit-sidenav-work-tool-height, var(--sidenav-icon-slot));
+  flex: 0 0 var(--orbit-sidenav-work-tool-width, var(--sidenav-icon-slot));
+}
+
+.workTools .iconSlot {
+  width: var(--orbit-sidenav-work-search-icon-size, var(--sidenav-icon-slot));
+  height: var(--orbit-sidenav-work-search-icon-size, var(--sidenav-icon-slot));
+  flex-basis: var(--orbit-sidenav-work-search-icon-size, var(--sidenav-icon-slot));
 }
 
 button.workTools,
@@ -338,7 +378,7 @@ button.profileMenu:focus-visible {
   min-width: 0;
   color: var(--orbit-sidenav-work-heading-color);
   font-size: var(--sidenav-row-font-size);
-  line-height: var(--sidenav-row-line-height);
+  line-height: var(--sidenav-work-heading-line-height);
 }
 
 .workList {
@@ -346,8 +386,10 @@ button.profileMenu:focus-visible {
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  gap: var(--orbit-space-s);
-  overflow: auto;
+  gap: var(--sidenav-work-list-gap);
+  padding: var(--sidenav-work-list-padding);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .workList::-webkit-scrollbar {
@@ -364,16 +406,16 @@ button.profileMenu:focus-visible {
 }
 
 .workItem {
-  --sidenav-hover-surface-start: var(--orbit-space-s);
-  --sidenav-hover-surface-end: var(--orbit-space-s);
+  --sidenav-hover-surface-start: calc(var(--sidenav-nav-list-padding-inline) - var(--sidenav-work-list-padding-inline));
+  --sidenav-hover-surface-end: calc(var(--sidenav-nav-list-padding-inline) - var(--sidenav-work-list-padding-inline));
   --sidenav-hover-surface-radius: var(--orbit-sidenav-nav-row-radius);
 
   position: relative;
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: var(--orbit-space-xxs);
-  padding: var(--orbit-space-s) var(--orbit-space-base) var(--orbit-space-s) var(--orbit-sidenav-work-item-padding-left);
+  gap: var(--sidenav-work-item-gap);
+  padding: var(--sidenav-work-item-padding);
   border: 0;
   background: transparent;
   color: var(--orbit-color-white);
@@ -390,19 +432,22 @@ button.profileMenu:focus-visible {
 .workTitle {
   color: var(--orbit-color-white);
   font-size: var(--sidenav-work-title-size);
-  line-height: var(--sidenav-row-line-height);
+  font-weight: var(--orbit-sidenav-work-title-font-weight, var(--orbit-font-weight-regular));
+  line-height: var(--sidenav-work-title-line-height);
 }
 
 .workSubtitle {
   color: var(--orbit-color-sidenav-muted);
   font-size: var(--sidenav-work-subtitle-size);
-  line-height: var(--orbit-leading-tight);
+  font-weight: var(--orbit-sidenav-work-subtitle-font-weight, var(--orbit-font-weight-regular));
+  line-height: var(--sidenav-work-subtitle-line-height);
 }
 
 .profile {
   display: flex;
+  min-height: var(--sidenav-profile-min-height);
   flex-direction: column;
-  gap: var(--orbit-space-s);
+  gap: var(--orbit-sidenav-profile-gap, var(--orbit-space-s));
   justify-content: flex-end;
   padding-bottom: var(--sidenav-profile-padding-bottom);
 }
@@ -415,9 +460,12 @@ button.profileMenu:focus-visible {
 .profileContent {
   display: flex;
   align-items: center;
-  gap: var(--sidenav-header-gap);
-  min-height: calc(var(--sidenav-avatar-size) + var(--orbit-space-base));
-  padding: var(--sidenav-profile-padding);
+  box-sizing: border-box;
+  gap: var(--sidenav-profile-content-gap);
+  width: var(--orbit-sidenav-profile-content-width, auto);
+  min-height: var(--sidenav-profile-content-min-height);
+  margin: var(--orbit-sidenav-profile-content-margin, 0);
+  padding: var(--sidenav-profile-content-padding);
 }
 
 .avatar {

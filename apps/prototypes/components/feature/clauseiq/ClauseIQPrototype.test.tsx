@@ -41,27 +41,23 @@ describe('ClauseIQ prototype flow', () => {
     render(<ClauseIQPrototype />);
 
     expect(screen.getByText('Connected Platform')).toBeInTheDocument();
-    expect(screen.getByText('Yorkshire Water')).toBeInTheDocument();
+    expect(screen.getByText('AstraZeneca')).toBeInTheDocument();
     expect(screen.getByText('Notifications')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
+    expect(screen.queryByText('5')).not.toBeInTheDocument();
     expect(screen.getByText('Content Search')).toBeInTheDocument();
-    expect(screen.getByText('Derek Wong')).toBeInTheDocument();
-    expect(screen.getByText('DW')).toBeInTheDocument();
-    expect(screen.getAllByText('ClauseIQ')).toHaveLength(4);
-    expect(screen.getByText('5d ago | TestClientTaxonomyCreatedBy')).toBeInTheDocument();
-    expect(screen.getByText('MarketIQ')).toBeInTheDocument();
-    expect(screen.getByText('1w ago | dfgdfgsdfg')).toBeInTheDocument();
+    expect(screen.getByText('Identify')).toBeInTheDocument();
+    expect(screen.getByText('Deliver')).toBeInTheDocument();
+    expect(screen.getByText('Sustain')).toBeInTheDocument();
+    expect(screen.queryByText('Derek Wong')).not.toBeInTheDocument();
+    expect(screen.queryByText('DW')).not.toBeInTheDocument();
+    expect(screen.queryByText('My Work')).not.toBeInTheDocument();
+    expect(screen.getAllByText('ClauseIQ')).toHaveLength(2);
     expect(screen.getByText('Home').closest('[aria-current="page"]')).toBeInTheDocument();
-    expect(screen.getByText('MarketIQ').closest('[aria-current="page"]')).not.toBeInTheDocument();
     expect(screen.queryByText('Project Management')).not.toBeInTheDocument();
 
     await user.click(screen.getByText('Content Search'));
     expect(screen.getByText('Content Search').closest('[aria-current="page"]')).toBeInTheDocument();
     expect(screen.getByText('Home').closest('[aria-current="page"]')).not.toBeInTheDocument();
-
-    await user.click(screen.getByText('MarketIQ'));
-    expect(screen.getByText('MarketIQ').closest('[aria-current="page"]')).toBeInTheDocument();
-    expect(screen.getByText('Content Search').closest('[aria-current="page"]')).not.toBeInTheDocument();
   });
 
   it('starts the flow, opens initiative search, and selects an initiative', async () => {
@@ -144,7 +140,7 @@ describe('ClauseIQ prototype flow', () => {
     expect(screen.queryByRole('heading', { name: 'Upload Contract' })).not.toBeInTheDocument();
   });
 
-  it('shows at least seven initiatives in the default Mine tab', async () => {
+  it('shows at least seven initiatives in the default Mine view', async () => {
     const user = userEvent.setup();
 
     render(<ClauseIQPrototype />);
@@ -156,6 +152,26 @@ describe('ClauseIQ prototype flow', () => {
     expect(within(initiativeTable).getAllByText('Legal Tech Platform Upgrade')).toHaveLength(7);
     expect(within(initiativeTable).getAllByText('Technology')).toHaveLength(7);
     expect(within(initiativeTable).getAllByText('Sarah Chen')).toHaveLength(7);
+  });
+
+  it('uses the Live grouped button pattern to switch Mine and Team initiatives', async () => {
+    const user = userEvent.setup();
+
+    render(<ClauseIQPrototype />);
+
+    await openInitiativeModal(user);
+
+    const ownershipGroup = screen.getByRole('group', { name: 'Initiative ownership' });
+    expect(within(ownershipGroup).queryByRole('tab')).not.toBeInTheDocument();
+    expect(within(ownershipGroup).getByRole('button', { name: 'Mine' })).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(within(ownershipGroup).getByRole('button', { name: 'Team' }));
+
+    expect(within(ownershipGroup).getByRole('button', { name: 'Team' })).toHaveAttribute('aria-pressed', 'true');
+
+    const initiativeTable = screen.getByRole('table', { name: 'Initiatives' });
+    expect(within(initiativeTable).getAllByRole('row')).toHaveLength(2);
+    expect(within(initiativeTable).getByText('Telemetry Supplier Review')).toBeInTheDocument();
   });
 
   it('keeps the welcome card informational after the flow starts', async () => {

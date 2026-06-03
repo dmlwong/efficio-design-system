@@ -17,6 +17,28 @@ describe('SideNav', () => {
     expect(screen.getByRole('navigation')).not.toHaveAttribute('style');
   });
 
+  it('renders the My Work region by default', () => {
+    const { container } = render(
+      <SideNav
+        {...requiredProps}
+        workItems={[{ id: 'default-work', title: 'Default work item', subtitle: 'Just now' }]}
+      />
+    );
+
+    expect(screen.getByText('My Work')).toBeInTheDocument();
+    expect(screen.getByText('Default work item')).toBeInTheDocument();
+    expect(container.querySelector('[class*="workHeaderDivided"]')).toBeInTheDocument();
+  });
+
+  it('renders the profile footer by default', () => {
+    const { container } = render(<SideNav {...requiredProps} />);
+
+    expect(screen.getByText('Alex Taylor')).toBeInTheDocument();
+    expect(screen.getByText('AT')).toBeInTheDocument();
+    expect(container.querySelector('[class*="profile"]')).toBeInTheDocument();
+    expect(container.querySelector('[class*="profileDivider"]')).toBeInTheDocument();
+  });
+
   it('supports custom shell labels and action icons without changing defaults', () => {
     const onWorkSearch = vi.fn();
     const onProfileMenu = vi.fn();
@@ -42,6 +64,99 @@ describe('SideNav', () => {
     expect(screen.getByText('Recent Work')).toBeInTheDocument();
     expect(onWorkSearch).toHaveBeenCalledTimes(1);
     expect(onProfileMenu).toHaveBeenCalledTimes(1);
+  });
+
+  it('can hide the work region while preserving nav and profile content', () => {
+    const { container } = render(
+      <SideNav
+        {...requiredProps}
+        showWorkRegion={false}
+        navItems={[{ id: 'home', icon: '\uf015', label: 'Home' }]}
+        workItems={[{ id: 'hidden-work', title: 'Hidden work item', subtitle: 'Just now' }]}
+      />
+    );
+
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.queryByText('My Work')).not.toBeInTheDocument();
+    expect(screen.queryByText('Hidden work item')).not.toBeInTheDocument();
+    expect(screen.getByText('Alex Taylor')).toBeInTheDocument();
+    expect(container.querySelector('[class*="workHeaderDivided"]')).not.toBeInTheDocument();
+  });
+
+  it('can hide the profile region and all divider chrome', () => {
+    const { container } = render(
+      <SideNav
+        {...requiredProps}
+        showProfile={false}
+        showDividers={false}
+        navItems={[{ id: 'home', icon: '\uf015', label: 'Home' }]}
+      />
+    );
+
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.queryByText('Alex Taylor')).not.toBeInTheDocument();
+    expect(screen.queryByText('AT')).not.toBeInTheDocument();
+    expect(container.querySelector('[class*="divider"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[class*="workHeaderDivided"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[class*="profileDivider"]')).not.toBeInTheDocument();
+  });
+
+  it('renders preview hover state on nav, section, subitem, and work rows without active semantics', () => {
+    const { container } = render(
+      <SideNav
+        {...requiredProps}
+        navItems={[{ id: 'hover-nav', icon: '\uf015', label: 'Hover Nav', previewState: 'hover' }]}
+        sections={[
+          {
+            id: 'hover-section',
+            label: 'Hover Section',
+            color: 'var(--orbit-color-header-deliver-from)',
+            expanded: true,
+            previewState: 'hover',
+            items: [
+              { id: 'hover-subitem', icon: '\uf135', label: 'Hover Subitem', previewState: 'hover' },
+            ],
+          },
+        ]}
+        workItems={[{ id: 'hover-work', title: 'Hover Work', subtitle: 'Just now', previewState: 'hover' }]}
+      />
+    );
+
+    expect(container.querySelectorAll('[class*="previewHover"]')).toHaveLength(4);
+    expect(screen.getByText('Hover Nav').closest('[class*="previewHover"]')).toBeInTheDocument();
+    expect(screen.getByText('Hover Section').closest('[class*="previewHover"]')).toBeInTheDocument();
+    expect(screen.getByText('Hover Subitem').closest('[class*="previewHover"]')).toBeInTheDocument();
+    expect(screen.getByText('Hover Work').closest('[class*="previewHover"]')).toBeInTheDocument();
+    expect(screen.getByText('Hover Nav').closest('[aria-current="page"]')).not.toBeInTheDocument();
+    expect(screen.getByText('Hover Subitem').closest('[aria-current="page"]')).not.toBeInTheDocument();
+    expect(screen.getByText('Hover Work').closest('[aria-current="page"]')).not.toBeInTheDocument();
+  });
+
+  it('renders visual hover surfaces on static nav and work rows without clickable affordances', () => {
+    render(
+      <SideNav
+        {...requiredProps}
+        navItems={[{ id: 'static-nav', icon: '\uf015', label: 'Static Nav' }]}
+        sections={[
+          {
+            id: 'static-section',
+            label: 'Static Section',
+            color: 'var(--orbit-color-header-deliver-from)',
+            expanded: true,
+            items: [
+              { id: 'static-subitem', icon: '\uf135', label: 'Static Subitem' },
+            ],
+          },
+        ]}
+        workItems={[{ id: 'static-work', title: 'Static Work', subtitle: 'Just now' }]}
+      />
+    );
+
+    expect(screen.getByText('Static Nav').closest('[class*="hoverable"]')).toBeInTheDocument();
+    expect(screen.getByText('Static Subitem').closest('[class*="hoverable"]')).toBeInTheDocument();
+    expect(screen.getByText('Static Work').closest('[class*="hoverable"]')).toBeInTheDocument();
+    expect(screen.getByText('Static Nav').closest('[class*="interactive"]')).not.toBeInTheDocument();
+    expect(screen.getByText('Static Work').closest('[class*="interactive"]')).not.toBeInTheDocument();
   });
 
   it('keys expanded state by section id when labels duplicate', () => {
@@ -112,5 +227,16 @@ describe('SideNav', () => {
     expect(screen.getByRole('navigation')).toHaveStyle('--sidenav-width: 220px');
     expect(screen.getByRole('link', { name: 'Document Search With A Very Long Label' })).toHaveAttribute('href', '/documents');
     expect(screen.getByText('Long Running Procurement Scenario Analysis')).toBeInTheDocument();
+  });
+
+  it('marks active navigation rows as the current page', () => {
+    render(
+      <SideNav
+        {...requiredProps}
+        navItems={[{ id: 'home', icon: '\uf015', label: 'Home', active: true }]}
+      />
+    );
+
+    expect(screen.getByText('Home').closest('[aria-current="page"]')).toHaveAttribute('aria-current', 'page');
   });
 });

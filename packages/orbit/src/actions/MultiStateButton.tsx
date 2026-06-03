@@ -33,8 +33,7 @@ export const MultiStateButton: React.FC<MultiStateButtonProps> = ({
   return (
     <button
       type="button"
-      role="tab"
-      aria-selected={selected}
+      aria-pressed={selected}
       disabled={disabled}
       tabIndex={disabled ? -1 : tabIndex ?? 0}
       onClick={disabled ? undefined : onClick}
@@ -66,6 +65,7 @@ export interface MultiStateGroupProps {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  fullWidth?: boolean;
 }
 
 export const MultiStateGroup: React.FC<MultiStateGroupProps> = ({
@@ -74,6 +74,7 @@ export const MultiStateGroup: React.FC<MultiStateGroupProps> = ({
   value,
   defaultValue,
   onValueChange,
+  fullWidth = false,
 }) => {
   const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
   const isControlled = value !== undefined;
@@ -95,11 +96,11 @@ export const MultiStateGroup: React.FC<MultiStateGroupProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (!['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
 
-    const tabs = Array.from(
-      event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(:disabled)')
+    const buttons = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
     );
-    const currentIndex = tabs.indexOf(document.activeElement as HTMLButtonElement);
-    if (tabs.length === 0 || currentIndex === -1) return;
+    const currentIndex = buttons.indexOf(document.activeElement as HTMLButtonElement);
+    if (buttons.length === 0 || currentIndex === -1) return;
 
     event.preventDefault();
 
@@ -107,19 +108,19 @@ export const MultiStateGroup: React.FC<MultiStateGroupProps> = ({
       event.key === 'Home'
         ? 0
         : event.key === 'End'
-          ? tabs.length - 1
+          ? buttons.length - 1
           : event.key === 'ArrowRight' || event.key === 'ArrowDown'
-            ? (currentIndex + 1) % tabs.length
-            : (currentIndex - 1 + tabs.length) % tabs.length;
+            ? (currentIndex + 1) % buttons.length
+            : (currentIndex - 1 + buttons.length) % buttons.length;
 
-    tabs[nextIndex]?.focus();
+    buttons[nextIndex]?.focus();
   };
 
   return (
     <div
-      role="tablist"
+      role="group"
       aria-label={ariaLabel}
-      className={styles.group}
+      className={clsx(styles.group, fullWidth && styles.groupFullWidth)}
       onKeyDown={handleKeyDown}
     >
       {React.Children.map(children, (child) => {

@@ -7,9 +7,9 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  position: sticky;
-  top: 0;
-  z-index: var(--orbit-z-sticky);
+  position: var(--orbit-page-header-position, sticky);
+  top: var(--orbit-page-header-top, 0);
+  z-index: var(--orbit-page-header-z-index, var(--orbit-z-sticky));
 }
 
 .row {

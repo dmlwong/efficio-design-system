@@ -11,11 +11,12 @@ import {
   Headings,
   HeaderPresets,
   IconButton,
+  MultiStateButton,
+  MultiStateGroup,
   Overlay,
   PageHeader,
   Searchbox,
   Spinner,
-  TabButton,
   Table,
   Text,
   ToolNextStepsCard,
@@ -365,6 +366,10 @@ function InitiativeSelectionModal({
     });
   }, [search, tab]);
 
+  const handleTabChange = (nextTab: string) => {
+    if (nextTab === 'mine' || nextTab === 'team') onSetTab(nextTab);
+  };
+
   return (
     <Overlay visible={open} onClose={onClose} ariaLabelledBy="clauseiq-initiative-modal-title" size="Large" height="Content">
       <div className={styles.modalLayout}>
@@ -382,9 +387,11 @@ function InitiativeSelectionModal({
         </div>
         <div className={styles.modalBody}>
           <div className={styles.modalToolbar}>
-            <div className={styles.tabs} role="tablist" aria-label="Initiative ownership">
-              <TabButton active={tab === 'mine'} onClick={() => onSetTab('mine')}>Mine</TabButton>
-              <TabButton active={tab === 'team'} onClick={() => onSetTab('team')}>Team</TabButton>
+            <div className={styles.tabs}>
+              <MultiStateGroup value={tab} onValueChange={handleTabChange} ariaLabel="Initiative ownership" fullWidth>
+                <MultiStateButton value="mine" label="Mine" />
+                <MultiStateButton value="team" label="Team" />
+              </MultiStateGroup>
             </div>
             <div className={styles.modalSearch}>
               <Searchbox
