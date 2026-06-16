@@ -56,6 +56,30 @@ describe('Chip', () => {
     expect(onRemove).not.toHaveBeenCalled();
   });
 
+  it('renders low-contrast categorisation Style variants', () => {
+    render(<Chip variant="Style 2" label="Tag" />);
+
+    const chip = screen.getByText('Tag').closest('span');
+    expect(chip).toHaveStyle({ '--_bg': 'var(--orbit-color-chip-style-2-bg)' });
+    expect(chip).toHaveStyle({ '--_border': '1px solid var(--orbit-color-chip-style-2-border)' });
+  });
+
+  it('renders high-contrast chips as a borderless solid fill with inverse text', () => {
+    render(<Chip variant="Information" contrast="High" label="Solid" />);
+
+    const chip = screen.getByText('Solid').closest('span');
+    expect(chip).toHaveStyle({ '--_bg': 'var(--orbit-color-chip-high-bg-information)' });
+    expect(chip).toHaveStyle({ '--_fg': 'var(--orbit-color-chip-high-fg)' });
+    expect(chip).toHaveStyle({ '--_border': 'none' });
+  });
+
+  it('falls back to low contrast for Style variants without a solid treatment', () => {
+    render(<Chip variant="Style 3" contrast="High" label="Tag" />);
+
+    const chip = screen.getByText('Tag').closest('span');
+    expect(chip).toHaveStyle({ '--_bg': 'var(--orbit-color-chip-style-3-bg)' });
+  });
+
   it('documents the TypeScript split between toggle and removable chips', () => {
     const removableChip: ChipProps = { label: 'Remove me', removable: true, onRemove: () => {} };
     // @ts-expect-error removable chips cannot also be toggle chips

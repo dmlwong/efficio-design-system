@@ -1,0 +1,236 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-l);
+  color: var(--orbit-color-text-primary);
+  font-family: var(--orbit-font-family-sans);
+}
+
+.benchmarkHeader,
+.stateToolbar,
+.stateControls,
+.stepHeader,
+.actionGroup,
+.permissionNotice,
+.dialogHeader,
+.dialogControls {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-base);
+}
+
+.benchmarkHeader,
+.dialogHeader {
+  justify-content: space-between;
+}
+
+.benchmarkHeader {
+  align-items: flex-start;
+  padding-block-end: var(--orbit-space-base);
+  border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.headingStack,
+.workflowSurface,
+.workflowColumn,
+.workflowCard,
+.selectedContext,
+.parameterItem,
+.statePanel,
+.resultItem,
+.nextActions,
+.nextActionCard,
+.dialogLayout,
+.primaryCell,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-xs);
+  min-width: var(--orbit-space-none);
+}
+
+.workflowSurface,
+.workflowColumn,
+.workflowCard,
+.nextActions,
+.dialogLayout {
+  gap: var(--orbit-space-base);
+}
+
+.bodyText {
+  max-width: calc(var(--orbit-space-mega) * 9);
+  margin: var(--orbit-space-none);
+  color: var(--orbit-color-text-secondary);
+  font-size: var(--orbit-text-sm);
+  line-height: var(--orbit-leading-relaxed);
+}
+
+.stateToolbar {
+  justify-content: space-between;
+  padding: var(--orbit-space-base);
+  border-block: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.stateControls,
+.actionGroup,
+.dialogControls {
+  flex-wrap: wrap;
+}
+
+.toggleButton[aria-pressed="true"] {
+  border-color: var(--orbit-color-border-selected);
+  background-color: var(--orbit-color-bg-selected);
+  color: var(--orbit-color-text-primary);
+}
+
+.workflowSurface {
+  padding: var(--orbit-space-base);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-md);
+  background-color: var(--orbit-color-bg-canvas);
+}
+
+.workflowColumn {
+  max-width: calc(var(--orbit-space-mega) * 12);
+}
+
+.stepHeader {
+  flex-wrap: wrap;
+}
+
+.selectedContext {
+  padding: var(--orbit-space-base);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-default);
+}
+
+.contextGrid,
+.parameterGrid,
+.resultGrid,
+.nextActionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--orbit-space-mega) * 3)), 1fr));
+  gap: var(--orbit-space-base);
+}
+
+.contextGrid {
+  margin: var(--orbit-space-none);
+}
+
+.contextGrid dt,
+.parameterItem > span:first-child {
+  color: var(--orbit-color-text-secondary);
+  font-size: var(--orbit-text-xs);
+  line-height: var(--orbit-leading-tight);
+}
+
+.contextGrid dd {
+  margin: var(--orbit-space-none);
+  color: var(--orbit-color-text-primary);
+  font-size: var(--orbit-text-sm);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-snug);
+}
+
+.parameterItem,
+.resultItem {
+  padding: var(--orbit-space-base);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-default);
+}
+
+.resultItem strong {
+  color: var(--orbit-color-text-heading);
+  font-size: var(--orbit-text-lg);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-tight);
+}
+
+.statePanel {
+  gap: var(--orbit-space-s);
+}
+
+.permissionNotice {
+  align-items: flex-start;
+}
+
+.skeletonLine,
+.skeletonLineShort {
+  display: block;
+  min-height: var(--orbit-space-base);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-hover);
+}
+
+.skeletonLine {
+  min-width: calc(var(--orbit-space-mega) * 6);
+}
+
+.skeletonLineShort {
+  min-width: calc(var(--orbit-space-mega) * 3);
+}
+
+.nextActionGrid {
+  align-items: stretch;
+}
+
+.nextActionCard {
+  height: 100%;
+}
+
+.dialogLayout {
+  padding: var(--orbit-space-m);
+}
+
+.dialogHeader {
+  padding-block-end: var(--orbit-space-base);
+  border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.dialogControls {
+  justify-content: space-between;
+}
+
+.searchArea {
+  flex: 1 1 calc(var(--orbit-space-mega) * 6);
+  min-width: min(100%, calc(var(--orbit-space-mega) * 4));
+}
+
+.primaryCell {
+  gap: var(--orbit-space-xxs);
+}
+
+.cellTitle {
+  color: var(--orbit-color-text-primary);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-snug);
+  white-space: nowrap;
+}
+
+.cellMeta {
+  color: var(--orbit-color-text-secondary);
+  font-size: var(--orbit-text-xs);
+  line-height: var(--orbit-leading-tight);
+  white-space: nowrap;
+}
+
+.wrapCell {
+  display: block;
+  min-width: calc(var(--orbit-space-mega) * 4);
+  color: var(--orbit-color-text-primary);
+  line-height: var(--orbit-leading-normal);
+}
+
+.nowrapCell {
+  white-space: nowrap;
+  line-height: var(--orbit-leading-normal);
+}
+
+.emptyState {
+  align-items: center;
+  gap: var(--orbit-space-xs);
+  padding: var(--orbit-space-l);
+  text-align: center;
+}

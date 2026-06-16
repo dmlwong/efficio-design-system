@@ -19,7 +19,9 @@
     "pack:orbit": "npm pack ./packages/orbit",
     "test:components": "vitest run",
     "test:components:watch": "vitest",
-    "build:design-md": "tsx scripts/build-design-md.ts"
+    "build:design-md": "tsx scripts/build-design-md.ts",
+    "export:style-guide": "node scripts/export-orbit-style-guide.mjs",
+    "bench:a11y": "node scripts/run-benchmark-accessibility-artifacts.mjs"
   },
   "overrides": {
     "postcss": "^8.5.10"

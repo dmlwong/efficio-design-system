@@ -25,5 +25,5 @@
     "test/**/*.ts",
     "scripts/**/*.ts"
   ],
-  "exclude": ["node_modules", "**/.next"]
+  "exclude": ["node_modules", "**/.next", "**/*.figma.ts"]
 }

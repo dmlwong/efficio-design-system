@@ -1,0 +1,285 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-l);
+  color: var(--orbit-color-text-primary);
+  font-family: var(--orbit-font-family-sans);
+}
+
+.benchmarkHeader,
+.stateToolbar,
+.toolbarRow,
+.activeFilters,
+.tableHeader,
+.statePanel,
+.detailPanel,
+.detailTitleRow,
+.permissionNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-base);
+}
+
+.benchmarkHeader,
+.stateToolbar,
+.toolbarRow,
+.activeFilters,
+.tableHeader,
+.statePanel,
+.detailPanel {
+  justify-content: space-between;
+}
+
+.benchmarkHeader {
+  align-items: flex-start;
+  padding-block-end: var(--orbit-space-base);
+  border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.projectShell,
+.projectPanel,
+.toolbar,
+.headingStack,
+.toolbarCopy,
+.statePanelCopy,
+.tableRegion,
+.primaryCell,
+.numericStack,
+.detailCopy,
+.detailItem,
+.emptyState,
+.loadingRegion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-xs);
+  min-width: var(--orbit-space-none);
+}
+
+.projectShell,
+.projectPanel,
+.tableRegion,
+.detailCopy {
+  gap: var(--orbit-space-base);
+}
+
+.stateToolbar {
+  align-items: center;
+  padding: var(--orbit-space-base);
+  border-block: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.stateControls,
+.scopeControls,
+.filterControls,
+.densityControls,
+.activeFilterList,
+.actionGroup,
+.resourceStack,
+.ownerCell {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-s);
+}
+
+.stateControls,
+.scopeControls,
+.filterControls,
+.densityControls,
+.activeFilterList,
+.toolbarRow,
+.detailTitleRow,
+.actionGroup {
+  flex-wrap: wrap;
+}
+
+.toggleButton[aria-pressed="true"] {
+  border-color: var(--orbit-color-border-selected);
+  background-color: var(--orbit-color-bg-selected);
+  color: var(--orbit-color-text-primary);
+}
+
+.summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--orbit-space-mega) * 3)), 1fr));
+  gap: var(--orbit-space-base);
+  padding: var(--orbit-space-base);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-md);
+  background-color: var(--orbit-color-bg-default);
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-xxs);
+  min-width: var(--orbit-space-none);
+}
+
+.summaryItem strong {
+  color: var(--orbit-color-text-heading);
+  font-size: var(--orbit-text-xl);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-tight);
+}
+
+.toolbar {
+  gap: var(--orbit-space-base);
+  padding-block: var(--orbit-space-base);
+  border-block: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.toolbarRow {
+  align-items: flex-end;
+}
+
+.searchArea {
+  flex: 1 1 calc(var(--orbit-space-mega) * 6);
+  min-width: min(100%, calc(var(--orbit-space-mega) * 4));
+}
+
+.filterControls {
+  flex: 1 1 calc(var(--orbit-space-mega) * 8);
+  align-items: flex-end;
+}
+
+.filterField {
+  flex: 1 1 calc(var(--orbit-space-mega) * 3);
+  min-width: min(100%, calc(var(--orbit-space-mega) * 3));
+}
+
+.activeFilters {
+  padding-block-end: var(--orbit-space-s);
+  border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.permissionNotice {
+  align-items: flex-start;
+}
+
+.tableHeader {
+  align-items: flex-start;
+}
+
+.primaryCell {
+  gap: var(--orbit-space-xxs);
+}
+
+.cellTitle {
+  color: var(--orbit-color-text-primary);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-snug);
+  white-space: nowrap;
+}
+
+.cellMeta {
+  color: var(--orbit-color-text-secondary);
+  font-size: var(--orbit-text-xs);
+  line-height: var(--orbit-leading-tight);
+  white-space: nowrap;
+}
+
+.nowrapCell,
+.numericCell {
+  white-space: nowrap;
+  line-height: var(--orbit-leading-normal);
+}
+
+.numericCell {
+  color: var(--orbit-color-text-primary);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--orbit-font-weight-semibold);
+}
+
+.numericStack {
+  align-items: flex-start;
+}
+
+.resourceStack {
+  gap: var(--orbit-space-xxs);
+}
+
+.resourceInitial,
+.resourceOverflow,
+.ownerInitial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--orbit-space-l);
+  min-height: var(--orbit-space-l);
+  padding-inline: var(--orbit-space-xxs);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-hover);
+  color: var(--orbit-color-text-secondary);
+  font-size: var(--orbit-text-xs);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-tight);
+}
+
+.resourceOverflow {
+  background-color: var(--orbit-color-bg-selected);
+  color: var(--orbit-color-text-primary);
+}
+
+.ownerCell {
+  min-width: calc(var(--orbit-space-mega) * 2);
+}
+
+.ownerInitial {
+  background-color: var(--orbit-color-bg-style1);
+  color: var(--orbit-color-text-primary);
+}
+
+.stageButton {
+  min-width: calc(var(--orbit-space-mega) * 2);
+  justify-content: space-between;
+}
+
+.actionGroup {
+  gap: var(--orbit-space-xs);
+}
+
+.emptyState {
+  align-items: center;
+  gap: var(--orbit-space-xs);
+  padding: var(--orbit-space-l);
+  text-align: center;
+}
+
+.loadingRegion {
+  gap: var(--orbit-space-s);
+}
+
+.skeletonLine {
+  display: block;
+  min-width: calc(var(--orbit-space-mega) * 2);
+  min-height: var(--orbit-space-base);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-hover);
+}
+
+.statePanel {
+  min-width: var(--orbit-space-none);
+}
+
+.detailPanel {
+  align-items: flex-start;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--orbit-space-mega) * 3)), 1fr));
+  gap: var(--orbit-space-base);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: var(--orbit-space-px);
+  height: var(--orbit-space-px);
+  padding: var(--orbit-space-none);
+  margin: var(--orbit-space-none);
+  overflow: hidden;
+  clip: rect(var(--orbit-space-none), var(--orbit-space-none), var(--orbit-space-none), var(--orbit-space-none));
+  white-space: nowrap;
+  border: var(--orbit-space-none);
+}

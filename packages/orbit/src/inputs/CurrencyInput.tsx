@@ -48,7 +48,6 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = ({
         <label htmlFor={inputId} className={styles.labelRow}>
           <span className={clsx(
             styles.labelText,
-            isFocused && styles.labelFocused,
             invalid && styles.labelError,
           )}>
             {label}
@@ -80,8 +79,15 @@ export const CurrencyInput: React.FC<CurrencyInputProps> = ({
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
-        <span className={clsx(styles.currency, disabled && styles.currencyDisabled)}>
-          {currency}
+        <span className={styles.currencyWrapper}>
+          <span className={styles.separator} aria-hidden="true" />
+          <span className={clsx(
+            styles.currency,
+            isFocused && styles.currencyFocused,
+            disabled && styles.currencyDisabled,
+          )}>
+            {currency}
+          </span>
         </span>
       </div>
       {message && (

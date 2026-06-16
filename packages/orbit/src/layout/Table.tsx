@@ -67,7 +67,12 @@ export function Table<T>({
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.id} scope="col" style={column.width ? { width: column.width } : undefined}>
+              <th
+                key={column.id}
+                scope="col"
+                aria-sort={column.sortDirection === 'asc' ? 'ascending' : column.sortDirection === 'desc' ? 'descending' : undefined}
+                style={column.width ? { width: column.width } : undefined}
+              >
                 <TableHeader column={column} />
               </th>
             ))}
@@ -120,6 +125,7 @@ function TableHeader<T>({ column }: { column: TableColumn<T> }) {
 
   const headerLabel = typeof column.header === 'string' ? column.header : column.id;
   const nextDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
+  const nextDirectionLabel = nextDirection === 'asc' ? 'ascending' : 'descending';
 
   return (
     <div className={styles.headerContent}>
@@ -129,7 +135,7 @@ function TableHeader<T>({ column }: { column: TableColumn<T> }) {
           className={styles.sortButton}
           onClick={() => column.onSortChange?.(nextDirection)}
           disabled={!column.onSortChange}
-          aria-label={`Sort ${headerLabel} ${nextDirection}`}
+          aria-label={`Sort ${headerLabel} ${nextDirectionLabel}`}
         >
           <span>{column.header}</span>
           <FaIcon icon={sortIcon} size={12} color="currentColor" />

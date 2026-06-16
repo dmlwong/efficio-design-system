@@ -12,6 +12,7 @@ export interface FaIconProps {
   icon: string; // Unicode character, e.g. '\uf00c' for check
   size?: number;
   color?: string;
+  className?: string;
   style?: React.CSSProperties;
   ariaHidden?: boolean;
 }
@@ -47,12 +48,14 @@ export const FaIcon: React.FC<FaIconProps> = ({
   icon,
   size = 12,
   color = 'currentColor',
+  className,
   style: externalStyle,
   ariaHidden = true,
 }) => {
   return (
     <span
       aria-hidden={ariaHidden}
+      className={className}
       style={{
         fontFamily: "'Font Awesome 6 Pro'",
         fontWeight: 400,

@@ -23,6 +23,22 @@ describe('Input', () => {
     expect(screen.getByRole('textbox', { name: 'Supplier' })).toBeInTheDocument();
   });
 
+  it('links helper and validation text through ariaDescribedBy', () => {
+    render(
+      <>
+        <span id="supplier-field-help">Use the registered supplier name.</span>
+        <Input
+          ariaLabel="Supplier"
+          ariaDescribedBy="supplier-field-help"
+          value=""
+          onChange={() => {}}
+        />
+      </>
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Supplier' })).toHaveAccessibleDescription('Use the registered supplier name.');
+  });
+
   it('calls onChange with the next string value', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();

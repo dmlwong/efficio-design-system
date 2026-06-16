@@ -19,18 +19,45 @@
   --orbit-text-h1-family: var(--orbit-font-family-sans);
   --orbit-text-h1-weight: var(--orbit-font-weight-semibold);
 
-  /* --- Card --- */
+  /* --- Card — Orbit overrides (Figma node 10537:9183) --- */
+  /* Backgrounds */
+  --orbit-color-card-bg-accent: #f8fafc;
+  --orbit-color-card-bg-highlight: #eaf0ff;
+  --orbit-color-card-bg-information: #eaf0ff;
+  --orbit-color-card-bg-success: #f7fef9;
+  --orbit-color-card-bg-warning: #fffbf2;
+  --orbit-color-card-bg-disabled: #e2e8f0;
+  /* Borders */
   --orbit-color-card-border-default: #e2e8f0;
   --orbit-color-card-border-hover: #e2e8f0;
-  --orbit-color-card-border-highlight: #615fff;
   --orbit-color-card-border-accent: #e2e8f0;
+  --orbit-color-card-border-highlight: #615fff;
+  --orbit-color-card-border-information: #1252de;
+  --orbit-color-card-border-success: #15803d;
+  --orbit-color-card-border-warning: #ffae2f;
+  --orbit-color-card-border-error: #cd0030;
   --orbit-color-card-border-disabled: #8594a9;
-  --orbit-color-card-border-selected: #4ade80;
+  --orbit-color-card-border-selected: #615fff;
   --orbit-color-card-border-style1: #ffae2f;
-  --orbit-color-card-bg-accent: #f8fafc;
-  --orbit-color-card-bg-disabled: #e2e8f0;
+  /* Indicators */
+  --orbit-color-card-indicator-default: #e2e8f0;
+  --orbit-color-card-indicator-accent: #e2e8f0;
+  --orbit-color-card-indicator-highlight: #615fff;
+  --orbit-color-card-indicator-feature: var(--orbit-color-card-indicator-information);
+  --orbit-color-card-indicator-information: #0073cf;
+  --orbit-color-card-indicator-success: #00a962;
+  --orbit-color-card-indicator-warning: #f0ab00;
+  --orbit-color-card-indicator-error: #e00034;
+  --orbit-color-card-indicator-disabled: #8594a9;
+  /* Legacy */
   --orbit-color-card-bg-selected: #f7fef9;
   --orbit-color-card-bg-style1: #fffbf2;
+  /* ToggleCard — Orbit overrides (Figma node 10383:9667) */
+  --orbit-color-togglecard-border: #e2e8f0;
+  --orbit-color-togglecard-bg-hover: #f1f5f9;
+  --orbit-color-togglecard-border-selected: #615fff;
+  --orbit-color-togglecard-bg-disabled: #e2e8f0;
+  --orbit-color-togglecard-border-disabled: #8594a9;
 
   /* --- Sidenav --- */
   --orbit-color-sidenav-bg: #041628;
@@ -124,7 +151,7 @@
   --orbit-color-chip-disabled-bg: #e2e8f0;
   --orbit-color-chip-disabled-fg: #8594a9;
   --orbit-color-text-info: #1252de;
-  --orbit-color-text-success: #15803d;
+  --orbit-color-text-success: #137538;
   --orbit-color-text-warning: #a15900;
   --orbit-color-text-error: #cd0030;
 

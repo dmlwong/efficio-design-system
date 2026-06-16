@@ -41,6 +41,12 @@ const appAndComponentFiles = [
   ...walk('apps/prototypes/app', (file) => file.endsWith('.tsx') || file.endsWith('.ts')),
   ...walk('apps/prototypes/components', (file) => file.endsWith('.tsx') || file.endsWith('.ts')),
 ];
+const docsShowcaseText = [
+  read('apps/docs/app/design-system/page.tsx'),
+  existsSync(join(root, 'apps/docs/app/design-system/ComponentShowcase.tsx'))
+    ? read('apps/docs/app/design-system/ComponentShowcase.tsx')
+    : '',
+].join('\n');
 
 const checks = [];
 
@@ -152,7 +158,7 @@ check(
     read('packages/orbit/src/feedback/InlineBanner.module.css').includes('.iconBox') &&
     read('packages/orbit/src/feedback/InlineBanner.module.css').includes('var(--orbit-inline-banner-icon-box-size)') &&
     read('packages/orbit/styles/tokens/components.css').includes('--orbit-color-status-high-bg-style-1') &&
-    read('apps/docs/app/design-system/page.tsx').includes('Neutral and Disabled'),
+    docsShowcaseText.includes('Neutral and Disabled'),
   'InlineBanner should have a tokenized icon box, a component-scoped Style 1 token, documented None outline behavior, and reference showcase coverage.'
 );
 
@@ -161,7 +167,7 @@ check(
   read('packages/orbit/src/feedback/Banner.tsx').includes('not the Figma "Feedback Banners" strip') &&
     read('packages/orbit/src/feedback/Banner.tsx').includes("export { Alert as Banner }") &&
     read('packages/orbit/src/feedback/index.ts').includes("export { Alert }") &&
-    read('apps/docs/app/design-system/page.tsx').includes('Alert Block'),
+    docsShowcaseText.includes('Alert Block'),
   'The multiline alert block should be exported as Alert while Banner remains a documented compatibility shim.'
 );
 
@@ -184,7 +190,7 @@ check(
   'PageHeader icon-only actions require a meaningful name',
   !read('packages/orbit/src/navigation/PageHeader.tsx').includes("'Page action'") &&
     read('packages/orbit/src/navigation/PageHeader.tsx').includes('const accessibleName = (ariaLabel || label).trim()') &&
-    !read('apps/docs/app/design-system/page.tsx').includes("label: '', icon:"),
+    !docsShowcaseText.includes("label: '', icon:"),
   'PageHeader should not fall back to a generic icon-only action label.'
 );
 
@@ -277,7 +283,7 @@ check(
   'Spinner supports labelled and decorative loading',
   read('packages/orbit/src/indicators/Spinner.tsx').includes("role={decorative ? undefined : 'status'}") &&
     read('packages/orbit/src/indicators/Spinner.tsx').includes('aria-hidden={decorative || undefined}') &&
-    read('apps/docs/app/design-system/page.tsx').includes('Spinners'),
+    docsShowcaseText.includes('Spinners'),
   'Spinner should be usable as a labelled status or hidden decoration beside visible loading text.'
 );
 

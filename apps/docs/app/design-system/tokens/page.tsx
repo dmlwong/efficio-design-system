@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Headings, Separator, Text } from '@efficio/orbit';
-import { DesignSystemShell } from '../DesignSystemShell';
+import { TOKEN_NAV_ITEMS } from '../tokenNav';
 
 /* ─── Token data ─── */
 
@@ -291,33 +291,68 @@ function SubTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ─── Sidebar nav ─── */
-const NAV_ITEMS = [
-  { label: 'Primitive Colors', id: 'primitive-colors' },
-  { label: 'Swatches', id: 'swatches' },
-  { label: 'Semantic Colors', id: 'semantic-colors' },
-  { label: 'Status — High Contrast', id: 'status-high' },
-  { label: 'Status — Low Contrast', id: 'status-low' },
-  { label: 'Spacing', id: 'spacing' },
-  { label: 'Typography', id: 'typography' },
-  { label: 'Elevation', id: 'elevation' },
-  { label: 'Component Tokens', id: 'component-tokens' },
-];
-
 /* ─── Page ─── */
 
 export default function TokensPage() {
-  const [mode, setMode] = useState<'efficio' | 'orbit'>('efficio');
+  const [activeSection, setActiveSection] = useState(TOKEN_NAV_ITEMS[0].id);
+  const isProgrammaticScrollRef = useRef(false);
+  const navItems = useMemo(() => TOKEN_NAV_ITEMS, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isProgrammaticScrollRef.current) return;
+
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length === 0) return;
+
+        visible.sort((a, b) => {
+          const ai = navItems.findIndex((item) => item.id === a.target.id);
+          const bi = navItems.findIndex((item) => item.id === b.target.id);
+          return ai - bi;
+        });
+
+        setActiveSection(visible[0].target.id);
+      },
+      { rootMargin: '-120px 0px -55% 0px', threshold: 0 },
+    );
+
+    navItems.forEach((item) => {
+      const element = document.getElementById(item.id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [navItems]);
 
   return (
-    <DesignSystemShell
-      mode={mode}
-      onModeChange={setMode}
-      title="Design Tokens"
-      subtitle="All semantic tokens — switches with Efficio/Orbit toggle"
-      currentPage="tokens"
-      navItems={NAV_ITEMS}
-    >
+    <div>
+      <style>{`
+        @media (max-width: 1120px) {
+          .token-docs-layout { grid-template-columns: minmax(0, 1fr) !important; }
+          .token-docs-toc { display: none !important; }
+        }
+      `}</style>
+
+      <div
+        className="token-docs-layout"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1fr) 220px',
+          gap: 'var(--orbit-space-mega)',
+          alignItems: 'start',
+        }}
+      >
+        <main style={{ minWidth: 0 }}>
+          <section style={{ marginBottom: 40 }}>
+            <Text variant="Secondary" size="Small">Orbit documentation</Text>
+            <div style={{ marginTop: 8 }}>
+              <Headings size="Heading 1">Design Tokens</Headings>
+            </div>
+            <p style={{ margin: 'var(--orbit-space-base) 0 0', maxWidth: 720, color: 'var(--orbit-color-text-secondary)', fontSize: 'var(--orbit-text-base)', lineHeight: 1.65 }}>
+              Semantic color, spacing, typography, elevation, and component tokens for Efficio and Orbit modes.
+            </p>
+          </section>
 
           {/* ── Primitive Colors ── */}
           <div id="primitive-colors" style={{ scrollMarginTop: 80 }}>
@@ -502,6 +537,51 @@ export default function TokensPage() {
               </div>
             ))}
           </div>
-    </DesignSystemShell>
+        </main>
+
+        <aside
+          className="token-docs-toc"
+          style={{
+            position: 'sticky',
+            top: 88,
+            borderLeft: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
+            paddingLeft: 'var(--orbit-space-base)',
+          }}
+        >
+          <Text variant="Bold" size="Small">On This Page</Text>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--orbit-space-xs)', marginTop: 'var(--orbit-space-s)' }}>
+            {navItems.map((item) => {
+              const active = activeSection === item.id;
+
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    isProgrammaticScrollRef.current = true;
+                    setActiveSection(item.id);
+                    document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    window.history.replaceState(null, '', `#${item.id}`);
+                    window.setTimeout(() => {
+                      isProgrammaticScrollRef.current = false;
+                    }, 600);
+                  }}
+                  style={{
+                    color: active ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-text-secondary)',
+                    textDecoration: 'none',
+                    fontSize: 'var(--orbit-text-xs)',
+                    lineHeight: 1.5,
+                    fontWeight: active ? 'var(--orbit-font-weight-semibold)' : 'var(--orbit-font-weight-regular)',
+                  }}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </nav>
+        </aside>
+      </div>
+    </div>
   );
 }

@@ -9,8 +9,8 @@
   --orbit-color-text-inverse: #ffffff;
   --orbit-color-text-error: #e00034;
   --orbit-color-text-info: #2a75b1;
-  --orbit-color-text-success: #009a81;
-  --orbit-color-text-warning: #af7d00;
+  --orbit-color-text-success: #007a66;
+  --orbit-color-text-warning: #8f6100;
   --orbit-color-text-heading: #040921;
 
   /* --------------------------------------------------------------------------
@@ -39,4 +39,18 @@
   --orbit-color-bg-style1: #fffbf2;
   --orbit-color-bg-canvas: var(--orbit-color-swatch-slate-100);
   --orbit-color-bg-canvas-grid: color-mix(in srgb, var(--orbit-color-swatch-slate-200) 64%, transparent);
+
+  /* --------------------------------------------------------------------------
+   * 5a. CONNECTED PLATFORM SEMANTIC COLORS
+   * -------------------------------------------------------------------------- */
+
+  --orbit-color-cp-border: #e5e5e5;
+  --orbit-color-cp-border-strong: #dee2e6;
+  --orbit-color-cp-surface-muted: #f3f4f4;
+  --orbit-color-cp-nav-bg: #5b72b5;
+  --orbit-color-cp-nav-active-fg: #3a4a82;
+  --orbit-color-cp-date-text: #4f575e;
+  --orbit-color-cp-timeline-highlight-bg: #e7f0fe;
+  --orbit-color-cp-step-complete: #00bd9e;
+  --orbit-color-cp-step-active: #0073cf;
 }

@@ -12,6 +12,7 @@ export interface BaseInputProps {
   icon?: React.ReactNode;
   style?: React.CSSProperties;
   id?: string;
+  ariaDescribedBy?: string;
   required?: boolean;
   disabled?: boolean;
   invalid?: boolean;
@@ -27,6 +28,7 @@ export const Input: React.FC<InputProps> = ({
   icon,
   style: externalStyle,
   id,
+  ariaDescribedBy,
   ariaLabel,
   ariaLabelledBy,
   required = false,
@@ -69,6 +71,7 @@ export const Input: React.FC<InputProps> = ({
         disabled={disabled}
         aria-label={accessibleName}
         aria-labelledby={ariaLabelledBy}
+        aria-describedby={ariaDescribedBy}
         aria-invalid={invalid || undefined}
         aria-required={required || undefined}
         required={required}

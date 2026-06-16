@@ -21,10 +21,10 @@ const bgMap: Record<string, string> = {
 };
 
 const fgMap: Record<NonNullable<BadgeProps['status']>, string> = {
-  Green: 'var(--orbit-color-white)',
-  Red: 'var(--orbit-color-white)',
-  Gray: 'var(--orbit-color-white)',
-  Success: 'var(--orbit-color-white)',
+  Green: 'var(--orbit-color-text-primary)',
+  Red: 'var(--orbit-color-text-primary)',
+  Gray: 'var(--orbit-color-text-primary)',
+  Success: 'var(--orbit-color-text-primary)',
   Information: 'var(--orbit-color-white)',
   Warning: 'var(--orbit-color-text-primary)',
   Error: 'var(--orbit-color-white)',

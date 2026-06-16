@@ -17,6 +17,10 @@
   border-color: var(--orbit-color-btn-secondary-border-hover);
 }
 
+.container:focus-within:not(.containerDisabled) {
+  border-color: var(--orbit-color-btn-secondary-border-focused);
+}
+
 .containerFocused {
   border-color: var(--orbit-color-btn-secondary-border-focused);
 }
@@ -45,11 +49,6 @@
   border: none;
   outline: none;
   width: 100%;
-}
-
-.input:focus-visible {
-  outline: 2px solid var(--orbit-color-border-focused);
-  outline-offset: 2px;
 }
 
 .input:disabled {

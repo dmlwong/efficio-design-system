@@ -30,9 +30,12 @@
 
 .dot {
   position: relative;
+  display: inline-grid;
+  place-items: center;
   width: var(--orbit-space-base);
   height: var(--orbit-space-base);
   flex: 0 0 var(--orbit-space-base);
+  box-sizing: border-box;
   border: var(--orbit-space-xxs) solid var(--orbit-color-checkbox-unchecked-border);
   border-radius: var(--orbit-radius-pill);
   background: var(--orbit-color-bg-default);
@@ -45,8 +48,9 @@
 
 .dotChecked::after {
   content: "";
-  position: absolute;
-  inset: calc(var(--orbit-space-xxs) + var(--orbit-space-px));
+  display: block;
+  width: calc(var(--orbit-space-xs) + var(--orbit-space-xxs));
+  height: calc(var(--orbit-space-xs) + var(--orbit-space-xxs));
   border-radius: var(--orbit-radius-pill);
   background: var(--orbit-color-checkbox-checked-bg);
 }

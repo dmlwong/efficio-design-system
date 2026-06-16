@@ -46,17 +46,62 @@
    * 5b. CARD
    * -------------------------------------------------------------------------- */
 
+  /* Card backgrounds — Figma CP/Efficio node 7151:9588 (base); Orbit overrides in themes/orbit.css */
   --orbit-color-card-bg-default: #ffffff;
   --orbit-color-card-bg-hover: #ffffff;
-  --orbit-color-card-bg-accent: #fafafa;
+  --orbit-color-card-bg-accent: #ffffff;
+  --orbit-color-card-bg-highlight: #e5f1fa;
+  --orbit-color-card-bg-feature: #ffffff;
+  --orbit-color-card-bg-information: #e5f1fa;
+  --orbit-color-card-bg-success: #dffcf3;
+  --orbit-color-card-bg-warning: #fffbf2;
+  --orbit-color-card-bg-error: #ffdedb;
   --orbit-color-card-bg-disabled: #e6e6e6;
-  --orbit-color-card-bg-selected: #dffcf3;
-  --orbit-color-card-bg-style1: #fffbf2;
+
+  /* Card borders */
   --orbit-color-card-border-default: #e6e6e6;
   --orbit-color-card-border-hover: #e6e6e6;
+  --orbit-color-card-border-accent: #a2a9c5;
   --orbit-color-card-border-highlight: #001969;
-  --orbit-color-card-border-accent: #e6e6e6;
+  --orbit-color-card-border-feature: var(--orbit-color-card-border-information);
+  --orbit-color-card-border-information: #2a75b1;
+  --orbit-color-card-border-success: #009a81;
+  --orbit-color-card-border-warning: #f0ab00;
+  --orbit-color-card-border-error: #e00034;
   --orbit-color-card-border-disabled: #cccccc;
+
+  /* Card left-edge indicator rail (4px) — high-contrast status colour */
+  --orbit-card-indicator-width: var(--orbit-space-xs);
+  --orbit-color-card-indicator-default: #e6e6e6;
+  --orbit-color-card-indicator-accent: #a2a9c5;
+  --orbit-color-card-indicator-highlight: #001969;
+  --orbit-color-card-indicator-feature: var(--orbit-color-card-indicator-information);
+  --orbit-color-card-indicator-information: #0073cf;
+  --orbit-color-card-indicator-success: #00a962;
+  --orbit-color-card-indicator-warning: #f0ab00;
+  --orbit-color-card-indicator-error: #e00034;
+  --orbit-color-card-indicator-disabled: #cccccc;
+  --orbit-card-shadow-rest: 0 1px 2px 0 #0000000f;
+  --orbit-card-shadow-hover: var(--orbit-shadow-sm);
+
+  /* --------------------------------------------------------------------------
+   * 5c. TOGGLE CARD
+   * -------------------------------------------------------------------------- */
+
+  /* ToggleCard — Figma Main Component Library, node 9924:3809
+     Values are per-theme (Efficio base here, Orbit overrides in themes/orbit.css).
+     Source of truth: Figma variable defs node 10255:6901 (Efficio) / 10383:9667 (Orbit). */
+  --orbit-color-togglecard-bg: var(--orbit-color-card-bg-default);
+  --orbit-color-togglecard-border: #e6e6e6;
+  --orbit-color-togglecard-bg-hover: #f6f6f6;
+  --orbit-color-togglecard-bg-selected: var(--orbit-color-card-bg-default);
+  --orbit-color-togglecard-border-selected: var(--orbit-color-card-border-selected);
+  --orbit-color-togglecard-bg-disabled: #e6e6e6;
+  --orbit-color-togglecard-border-disabled: #cccccc;
+
+  /* Retained for legacy consumers (Dropzone, Orbit theme card success/warning) */
+  --orbit-color-card-bg-selected: #dffcf3;
+  --orbit-color-card-bg-style1: #fffbf2;
   --orbit-color-card-border-selected: #00bd9e;
   --orbit-color-card-border-style1: #f0ab00;
 
@@ -81,6 +126,27 @@
   --orbit-color-chip-default-border: var(--orbit-color-border-default);
   --orbit-color-chip-disabled-bg: var(--orbit-color-bg-disabled);
   --orbit-color-chip-disabled-fg: var(--orbit-color-text-disabled);
+
+  /* High-contrast (solid fill) chips — Style × Contrast model (Figma node 132:398).
+   * Foreground is the inverse colour; "None" keeps a primary foreground on a tint. */
+  --orbit-color-chip-high-fg: var(--orbit-color-white);
+  --orbit-color-chip-high-fg-none: var(--orbit-color-text-primary);
+  --orbit-color-chip-high-bg-information: var(--orbit-color-status-high-bg-information);
+  --orbit-color-chip-high-bg-success: var(--orbit-color-status-high-bg-success);
+  --orbit-color-chip-high-bg-warning: var(--orbit-color-status-high-bg-warning);
+  --orbit-color-chip-high-bg-error: var(--orbit-color-status-high-bg-error);
+  --orbit-color-chip-high-bg-style-1: var(--orbit-color-swatch-hollywood-cerise-800);
+  --orbit-color-chip-high-bg-none: var(--orbit-color-status-high-bg-no-status);
+
+  /* Low-contrast (tinted + bordered) categorisation chips — Style 1–4 */
+  --orbit-color-chip-style-1-bg: var(--orbit-color-status-low-bg-additional-1);
+  --orbit-color-chip-style-1-border: var(--orbit-color-status-low-border-additional-1);
+  --orbit-color-chip-style-2-bg: var(--orbit-color-status-low-bg-additional-2);
+  --orbit-color-chip-style-2-border: var(--orbit-color-status-low-border-additional-2);
+  --orbit-color-chip-style-3-bg: var(--orbit-color-status-low-bg-additional-3);
+  --orbit-color-chip-style-3-border: var(--orbit-color-status-low-border-additional-3);
+  --orbit-color-chip-style-4-bg: var(--orbit-color-status-low-bg-additional-4);
+  --orbit-color-chip-style-4-border: var(--orbit-color-status-low-border-additional-4);
 
   /* --------------------------------------------------------------------------
    * 8b. CHECKBOX
@@ -151,6 +217,14 @@
   --orbit-color-status-low-icon-no-status: #cccccc;
   --orbit-color-status-low-fg-no-status: #000000;
 
+  /* Additional — categorisation Style 1–4 (Figma Chips node 132:398) */
+  --orbit-color-status-low-bg-additional-1: #e5f1fa;
+  --orbit-color-status-low-border-additional-1: #2a75b1;
+  --orbit-color-status-low-bg-additional-2: #e5edee;
+  --orbit-color-status-low-border-additional-2: #34585c;
+  --orbit-color-status-low-bg-additional-3: #ffe8cf;
+  --orbit-color-status-low-border-additional-3: #c48c00;
+  --orbit-color-status-low-bg-additional-4: var(--orbit-color-swatch-hollywood-cerise-300);
   --orbit-color-status-low-border-additional-4: #ae008d;
 
   /* --------------------------------------------------------------------------
@@ -167,7 +241,7 @@
   --orbit-color-sidenav-bg: #2f3342;
   --orbit-color-sidenav-active-bg: #43485d;
   --orbit-color-sidenav-divider: #43485d;
-  --orbit-color-sidenav-muted: #7d87ae;
+  --orbit-color-sidenav-muted: #a3aecf;
   --orbit-color-sidenav-gradient-from: #147ed3;
   --orbit-color-sidenav-gradient-to: #2a75b1;
   --orbit-sidenav-width: 300px;
@@ -342,6 +416,77 @@
   --orbit-multistate-label-color: var(--orbit-color-text-primary);
   --orbit-multistate-icon-size: var(--orbit-space-base);
 
+  /* --- CP Workspace Shell --- */
+  --orbit-cp-font-family: var(--orbit-font-family-brand);
+  --orbit-cp-body-line-height: 21px;
+  --orbit-cp-shell-min-height: 100vh;
+  --orbit-cp-shell-rail-width: 56px;
+  --orbit-cp-shell-bg: var(--orbit-color-bg-default);
+  --orbit-cp-shell-content-bg: var(--orbit-color-cp-surface-muted);
+  --orbit-cp-shell-content-padding: var(--orbit-space-m);
+  --orbit-cp-border-width: var(--orbit-space-px);
+  --orbit-cp-disabled-opacity: 0.5;
+  --orbit-cp-rail-bg: var(--orbit-color-bg-default);
+  --orbit-cp-rail-border-color: var(--orbit-color-cp-border);
+  --orbit-cp-rail-row-width: 55px;
+  --orbit-cp-rail-row-min-height: 46px;
+  --orbit-cp-rail-row-padding: var(--orbit-space-s);
+  --orbit-cp-rail-row-gap: var(--orbit-space-xxs);
+  --orbit-cp-rail-icon-box-size: 39px;
+  --orbit-cp-rail-icon-box-radius: var(--orbit-radius-md);
+  --orbit-cp-rail-icon-size: 14px;
+  --orbit-cp-rail-active-bg: color-mix(in srgb, var(--orbit-color-cp-step-complete) 16%, transparent);
+  --orbit-cp-rail-label-size: 8px;
+  --orbit-cp-rail-label-line-height: 12px;
+  --orbit-cp-rail-avatar-size: var(--orbit-space-l);
+  --orbit-cp-radius-round: 999px;
+  --orbit-cp-breadcrumb-height: 40px;
+  --orbit-cp-header-height: 56px;
+  --orbit-cp-header-padding-inline: var(--orbit-space-m);
+  --orbit-cp-header-border-color: var(--orbit-color-cp-border);
+  --orbit-cp-title-icon-size: var(--orbit-space-l);
+  --orbit-cp-title-icon-radius: var(--orbit-radius-sm);
+  --orbit-cp-title-gap: var(--orbit-space-s);
+  --orbit-cp-primary-nav-gap: var(--orbit-space-l);
+  --orbit-cp-primary-nav-line-height: var(--orbit-cp-body-line-height);
+  --orbit-cp-primary-nav-color: var(--orbit-color-text-secondary);
+  --orbit-cp-primary-nav-active-color: var(--orbit-color-text-primary);
+  --orbit-cp-primary-nav-hover-color: var(--orbit-color-text-primary);
+  --orbit-cp-secondary-height: 56px;
+  --orbit-cp-secondary-bg: var(--orbit-color-cp-nav-bg);
+  --orbit-cp-secondary-fg: var(--orbit-color-text-inverse);
+  --orbit-cp-secondary-padding-inline: var(--orbit-space-m);
+  --orbit-cp-secondary-tab-group-gap: 6px;
+  --orbit-cp-secondary-tab-height: 44px;
+  --orbit-cp-secondary-tab-padding: var(--orbit-space-s) 12px;
+  --orbit-cp-secondary-tab-radius: var(--orbit-radius-md) var(--orbit-radius-md) var(--orbit-radius-none) var(--orbit-radius-none);
+  --orbit-cp-secondary-tab-active-bg: var(--orbit-color-cp-surface-muted);
+  --orbit-cp-secondary-tab-active-fg: var(--orbit-color-cp-nav-active-fg);
+  --orbit-cp-secondary-tab-hover-bg: var(--orbit-color-cp-nav-active-fg);
+  --orbit-cp-secondary-action-gap: var(--orbit-space-s);
+  --orbit-cp-timeline-height: 88px;
+  --orbit-cp-timeline-bg: var(--orbit-color-bg-default);
+  --orbit-cp-timeline-border-color: var(--orbit-color-cp-border-strong);
+  --orbit-cp-timeline-padding-inline: var(--orbit-space-m);
+  --orbit-cp-timeline-inner-padding-inline: var(--orbit-space-l);
+  --orbit-cp-timeline-track-height: 60px;
+  --orbit-cp-timeline-list-padding-top: 60px;
+  --orbit-cp-timeline-list-min-width: 100%;
+  --orbit-cp-timeline-highlight-height: var(--orbit-space-xxl);
+  --orbit-cp-timeline-highlight-bg: var(--orbit-color-cp-timeline-highlight-bg);
+  --orbit-cp-timeline-highlight-radius: var(--orbit-radius-md);
+  --orbit-cp-timeline-symbol-offset: 36px;
+  --orbit-cp-timeline-step-symbol-size: 23px;
+  --orbit-cp-timeline-step-complete-bg: var(--orbit-color-cp-step-complete);
+  --orbit-cp-timeline-step-active-bg: var(--orbit-color-cp-step-active);
+  --orbit-cp-timeline-step-upcoming-bg: var(--orbit-color-border-disabled);
+  --orbit-cp-timeline-step-min-width: var(--orbit-space-xxl);
+  --orbit-cp-timeline-step-flex-basis: var(--orbit-space-xxl);
+  --orbit-cp-timeline-label-max-width: 120px;
+  --orbit-cp-timeline-date-size: var(--orbit-text-xs);
+  --orbit-cp-timeline-date-line-height: 18px;
+  --orbit-cp-timeline-date-color: var(--orbit-color-cp-date-text);
+
   /* --- Required --- */
   --orbit-required-width: 7px;
 
@@ -349,4 +494,37 @@
   --orbit-radial-size: 24px;
   --orbit-radial-stroke-radius: 6;
   --orbit-radial-stroke-width: 2.5;
+}
+
+/* Enables nested Efficio/Figma parity previews inside an Orbit-themed docs shell. */
+[data-theme="efficio"] {
+  --orbit-color-card-bg-default: #ffffff;
+  --orbit-color-card-bg-hover: #ffffff;
+  --orbit-color-card-bg-accent: #ffffff;
+  --orbit-color-card-bg-highlight: #e5f1fa;
+  --orbit-color-card-bg-feature: #ffffff;
+  --orbit-color-card-bg-information: #e5f1fa;
+  --orbit-color-card-bg-success: #dffcf3;
+  --orbit-color-card-bg-warning: #fffbf2;
+  --orbit-color-card-bg-error: #ffdedb;
+  --orbit-color-card-bg-disabled: #e6e6e6;
+  --orbit-color-card-border-default: #e6e6e6;
+  --orbit-color-card-border-hover: #e6e6e6;
+  --orbit-color-card-border-accent: #a2a9c5;
+  --orbit-color-card-border-highlight: #001969;
+  --orbit-color-card-border-feature: var(--orbit-color-card-border-information);
+  --orbit-color-card-border-information: #2a75b1;
+  --orbit-color-card-border-success: #009a81;
+  --orbit-color-card-border-warning: #f0ab00;
+  --orbit-color-card-border-error: #e00034;
+  --orbit-color-card-border-disabled: #cccccc;
+  --orbit-color-card-indicator-default: #e6e6e6;
+  --orbit-color-card-indicator-accent: #a2a9c5;
+  --orbit-color-card-indicator-highlight: #001969;
+  --orbit-color-card-indicator-feature: var(--orbit-color-card-indicator-information);
+  --orbit-color-card-indicator-information: #0073cf;
+  --orbit-color-card-indicator-success: #00a962;
+  --orbit-color-card-indicator-warning: #f0ab00;
+  --orbit-color-card-indicator-error: #e00034;
+  --orbit-color-card-indicator-disabled: #cccccc;
 }

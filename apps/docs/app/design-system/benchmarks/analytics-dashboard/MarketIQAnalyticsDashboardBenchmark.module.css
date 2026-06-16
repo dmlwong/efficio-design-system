@@ -1,0 +1,408 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-l);
+  color: var(--orbit-color-text-primary);
+  font-family: var(--orbit-font-family-sans);
+}
+
+.header,
+.stateToolbar,
+.tableHeader,
+.panelHeader,
+.statePanel,
+.headerActions,
+.stateControls,
+.filterControls,
+.kpiLabelRow,
+.chartLegend,
+.permissionNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--orbit-space-base);
+}
+
+.header,
+.stateToolbar,
+.tableHeader,
+.panelHeader,
+.statePanel {
+  justify-content: space-between;
+}
+
+.header {
+  align-items: flex-start;
+  padding-block-end: var(--orbit-space-base);
+  border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.headerCopy,
+.headingStack,
+.toolbarCopy,
+.kpiCard,
+.chartPanel,
+.trendFrame,
+.tableRegion,
+.toolbar,
+.statePanelCopy,
+.loadingRegion,
+.chartSkeleton,
+.emptyState,
+.barLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-xs);
+  min-width: var(--orbit-space-none);
+}
+
+.headerCopy {
+  flex: 1 1 calc(var(--orbit-space-mega) * 7);
+}
+
+.headerActions,
+.stateControls,
+.filterControls,
+.tableHeader,
+.chartLegend {
+  flex-wrap: wrap;
+}
+
+.stateToolbar {
+  align-items: center;
+  padding: var(--orbit-space-base);
+  border-block: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.toggleButton[aria-pressed="true"] {
+  border-color: var(--orbit-color-border-selected);
+  background-color: var(--orbit-color-bg-selected);
+  color: var(--orbit-color-text-primary);
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--orbit-space-mega) * 3)), 1fr));
+  gap: var(--orbit-space-base);
+}
+
+.kpiGrid[data-density="compact"] {
+  gap: var(--orbit-space-s);
+}
+
+.kpiValue {
+  color: var(--orbit-color-text-heading);
+  font-size: var(--orbit-text-2xl);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.kpiLabelRow {
+  justify-content: space-between;
+  gap: var(--orbit-space-s);
+}
+
+.delta,
+.deltaCell,
+.legendItem,
+.legendMeta,
+.tableMeta,
+.cellMeta,
+.nowrapCell,
+.barValue {
+  font-size: var(--orbit-text-xs);
+  line-height: var(--orbit-leading-snug);
+}
+
+.delta,
+.deltaCell,
+.legendItem,
+.barValue,
+.permissionNotice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--orbit-space-xs);
+}
+
+.deltaPeriod,
+.legendMeta,
+.tableMeta,
+.cellMeta {
+  color: var(--orbit-color-text-secondary);
+}
+
+.positive {
+  color: var(--orbit-color-text-success);
+}
+
+.negative {
+  color: var(--orbit-color-text-warning);
+}
+
+.neutral {
+  color: var(--orbit-color-text-secondary);
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--orbit-space-mega) * 6)), 1fr));
+  gap: var(--orbit-space-base);
+  align-items: stretch;
+}
+
+.chartGrid[data-density="compact"] {
+  gap: var(--orbit-space-s);
+}
+
+.chartPanel {
+  gap: var(--orbit-space-base);
+}
+
+.panelHeader {
+  align-items: flex-start;
+  padding-block-end: var(--orbit-space-s);
+  border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.trendSvg {
+  display: block;
+  width: 100%;
+  min-height: calc(var(--orbit-space-mega) * 4);
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: var(--orbit-color-border-default);
+  stroke-width: var(--orbit-space-px);
+}
+
+.trendArea {
+  fill: var(--orbit-color-status-low-bg-information);
+}
+
+.trendLine {
+  fill: none;
+  stroke: var(--orbit-color-status-high-bg-information);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: calc(var(--orbit-space-px) * 3);
+}
+
+.trendPoint {
+  r: var(--orbit-space-xs);
+  fill: var(--orbit-color-bg-default);
+  stroke: var(--orbit-color-status-high-bg-information);
+  stroke-width: calc(var(--orbit-space-px) * 2);
+}
+
+.axisTick,
+.xAxisLabel {
+  fill: var(--orbit-color-text-secondary);
+  font-family: var(--orbit-font-family-sans);
+  font-size: var(--orbit-text-xs);
+  line-height: var(--orbit-leading-snug);
+}
+
+.axisTick {
+  text-anchor: end;
+  dominant-baseline: middle;
+}
+
+.xAxisLabel {
+  text-anchor: middle;
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: var(--orbit-space-base);
+  height: var(--orbit-space-xs);
+  border-radius: var(--orbit-radius-sm);
+}
+
+.legendMarket {
+  background-color: var(--orbit-color-status-high-bg-information);
+}
+
+.categoryBars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-s);
+}
+
+.categoryBarRow {
+  display: grid;
+  grid-template-columns: minmax(min(100%, calc(var(--orbit-space-mega) * 2)), 1fr) minmax(min(100%, calc(var(--orbit-space-mega) * 2)), 2fr) max-content;
+  align-items: center;
+  gap: var(--orbit-space-s);
+}
+
+.barTrack {
+  display: flex;
+  align-items: stretch;
+  min-height: var(--orbit-space-base);
+  overflow: hidden;
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-hover);
+}
+
+.barFill {
+  display: block;
+  width: calc(var(--bar-value) * 1%);
+  min-width: var(--orbit-space-xs);
+}
+
+.barHigh {
+  background-color: var(--orbit-color-status-high-bg-error);
+}
+
+.barMedium {
+  background-color: var(--orbit-color-status-high-bg-warning);
+}
+
+.barLow {
+  background-color: var(--orbit-color-status-high-bg-success);
+}
+
+.tableRegion {
+  gap: var(--orbit-space-base);
+}
+
+.toolbar {
+  gap: var(--orbit-space-base);
+  padding-block: var(--orbit-space-base);
+  border-block: var(--orbit-space-px) solid var(--orbit-color-border-default);
+}
+
+.permissionNotice {
+  align-items: flex-start;
+  padding: var(--orbit-space-s);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-style1);
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-style1);
+}
+
+.primaryCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-xxs);
+  min-width: calc(var(--orbit-space-mega) * 3);
+}
+
+.cellTitle {
+  color: var(--orbit-color-text-primary);
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.numericCell,
+.nowrapCell {
+  white-space: nowrap;
+  color: var(--orbit-color-text-primary);
+  line-height: var(--orbit-leading-normal);
+}
+
+.numericCell {
+  font-weight: var(--orbit-font-weight-semibold);
+}
+
+.wrapCell {
+  display: block;
+  min-width: calc(var(--orbit-space-mega) * 4);
+  color: var(--orbit-color-text-primary);
+  line-height: var(--orbit-leading-normal);
+}
+
+.badgeStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--orbit-space-xs);
+}
+
+.statePanel {
+  align-items: flex-start;
+}
+
+.statePanelCopy {
+  flex: 1 1 calc(var(--orbit-space-mega) * 6);
+  gap: var(--orbit-space-xs);
+}
+
+.stateIcon,
+.warningIcon,
+.errorIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: var(--orbit-space-l);
+  min-height: var(--orbit-space-l);
+}
+
+.stateIcon {
+  color: var(--orbit-color-text-info);
+}
+
+.warningIcon {
+  color: var(--orbit-color-text-warning);
+}
+
+.errorIcon {
+  color: var(--orbit-color-text-error);
+}
+
+.loadingRegion {
+  gap: var(--orbit-space-base);
+}
+
+.skeletonValue,
+.skeletonLine,
+.skeletonLineShort,
+.skeletonChart {
+  display: block;
+  border-radius: var(--orbit-radius-sm);
+  background-color: var(--orbit-color-bg-hover);
+}
+
+.skeletonValue {
+  width: calc(var(--orbit-space-mega) * 2);
+  min-height: var(--orbit-space-l);
+}
+
+.skeletonLine,
+.skeletonLineShort {
+  min-height: var(--orbit-space-base);
+}
+
+.skeletonLine {
+  width: 100%;
+}
+
+.skeletonLineShort {
+  width: calc(var(--orbit-space-mega) * 3);
+}
+
+.skeletonChart {
+  min-height: calc(var(--orbit-space-mega) * 4);
+}
+
+.emptyState {
+  align-items: center;
+  gap: var(--orbit-space-xs);
+  padding: var(--orbit-space-l);
+  text-align: center;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: var(--orbit-space-px);
+  height: var(--orbit-space-px);
+  padding: var(--orbit-space-none);
+  margin: var(--orbit-space-none);
+  overflow: hidden;
+  clip: rect(var(--orbit-space-none), var(--orbit-space-none), var(--orbit-space-none), var(--orbit-space-none));
+  white-space: nowrap;
+  border: var(--orbit-space-none);
+}

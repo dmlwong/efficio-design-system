@@ -49,4 +49,10 @@ describe('PageHeader', () => {
       expect(nextTab).toHaveFocus();
     });
   });
+
+  it('announces badge counts in tab names', () => {
+    render(<PageHeader title="Procurement" tabs={[{ label: 'My QC tasks', badge: 2 }]} />);
+
+    expect(screen.getByRole('tab', { name: 'My QC tasks, 2 items' })).toBeInTheDocument();
+  });
 });

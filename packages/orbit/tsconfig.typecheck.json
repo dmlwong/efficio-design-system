@@ -4,5 +4,5 @@
     "noEmit": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["src/**/*.test.tsx", "node_modules", "dist"]
+  "exclude": ["src/**/*.test.tsx", "src/**/*.figma.ts", "node_modules", "dist"]
 }

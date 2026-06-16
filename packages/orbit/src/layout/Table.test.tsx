@@ -116,7 +116,9 @@ describe('Table', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Sort Name desc' }));
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveAttribute('aria-sort', 'ascending');
+
+    await user.click(screen.getByRole('button', { name: 'Sort Name descending' }));
     await user.click(screen.getByRole('button', { name: '2' }));
 
     expect(onSortChange).toHaveBeenCalledWith('desc');

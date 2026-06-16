@@ -201,6 +201,7 @@ function TabBar({ tabs, activeTab, onTabChange, showTabUnderline, tabIdBase }: {
             id={tabId}
             active={i === activeTab}
             ariaControls={tab.panelId}
+            aria-label={tab.badge !== undefined ? `${tab.label}, ${tab.badge} items` : undefined}
             disabled={tab.disabled}
             onClick={() => onTabChange(i)}
             showUnderline={showTabUnderline}

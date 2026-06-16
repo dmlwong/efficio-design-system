@@ -13,6 +13,7 @@ import {
   Checkbox,
   Chip,
   CountryFlag,
+  CpWorkspaceShell,
   CurrencyInput,
   DateInput,
   DocumentGlyph,
@@ -155,6 +156,18 @@ describe('Orbit public component smoke coverage', () => {
           navItems={[{ id: 'home', icon: FA.user, label: 'Nav smoke' }]}
         />
         <PageHeader title="Page header smoke" />
+        <CpWorkspaceShell
+          railItems={[{ id: 'workspace', icon: FA.grip, label: 'Workspace', active: true }]}
+          breadcrumbItems={[{ id: 'projects', label: 'Projects', href: '#' }, { id: 'current', label: 'Current', current: true }]}
+          workspaceTitle="Connected Platform"
+          primaryNavItems={[{ id: 'initiatives', label: 'Initiatives', active: true }]}
+          secondaryLabel="CP001-1014 | sdasd"
+          secondaryNavItems={[{ id: 'workspace', label: 'Workspace', active: true }]}
+          timelineSteps={[{ id: 'start', label: 'Start', date: '2026-01-07', active: true }]}
+          user={{ name: 'Ada Lovelace', initials: 'AL' }}
+        >
+          CP workspace smoke
+        </CpWorkspaceShell>
 
         <Alert type="Information" title="Alert smoke" />
         <InlineBanner variant="Information" label="Inline smoke" />
