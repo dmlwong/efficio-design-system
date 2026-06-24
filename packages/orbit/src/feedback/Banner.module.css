@@ -35,8 +35,8 @@
 .title {
   font-family: var(--orbit-font-family-brand);
   font-size: var(--orbit-text-body-size);
-  font-weight: var(--orbit-font-weight-bold);
-  line-height: 1;
+  font-weight: var(--orbit-font-weight-semibold);
+  line-height: var(--orbit-text-strong-leading);
   color: var(--_fg);
 }
 
@@ -54,11 +54,12 @@
   justify-content: center;
   width: var(--orbit-space-m);
   height: var(--orbit-space-m);
-  padding: var(--orbit-space-s);
+  padding: 0;
   background: none;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
+  color: var(--orbit-color-dark-grey);
 }
 
 .dismissButton:focus-visible {

@@ -12,6 +12,7 @@ export interface BaseInputProps {
   icon?: React.ReactNode;
   style?: React.CSSProperties;
   id?: string;
+  autoComplete?: string;
   ariaDescribedBy?: string;
   required?: boolean;
   disabled?: boolean;
@@ -28,6 +29,7 @@ export const Input: React.FC<InputProps> = ({
   icon,
   style: externalStyle,
   id,
+  autoComplete,
   ariaDescribedBy,
   ariaLabel,
   ariaLabelledBy,
@@ -67,6 +69,7 @@ export const Input: React.FC<InputProps> = ({
         className={clsx(styles.input, isFilled && styles.inputFilled)}
         placeholder={placeholder}
         value={value}
+        autoComplete={autoComplete}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
         aria-label={accessibleName}

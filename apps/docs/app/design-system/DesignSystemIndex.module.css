@@ -1,0 +1,40 @@
+.indexCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--orbit-space-xs);
+  min-height: var(--_index-card-min-height, auto);
+  min-width: 0;
+  box-sizing: border-box;
+  padding: var(--orbit-space-base);
+  color: var(--orbit-color-text-primary);
+  text-decoration: none;
+  background: var(--orbit-color-bg-default);
+  border: var(--orbit-space-px) solid var(--orbit-color-border-default);
+  border-radius: var(--_index-card-radius, var(--orbit-radius-sm));
+  box-shadow: var(--orbit-shadow-none);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.indexCard:hover {
+  background: var(--orbit-color-bg-hover);
+  border-color: var(--orbit-color-border-focused);
+  box-shadow: var(--orbit-shadow-sm);
+  transform: translateY(calc(var(--orbit-space-xxs) * -1));
+}
+
+.indexCard:focus-visible {
+  outline: var(--orbit-space-xxs) solid var(--orbit-color-focus-ring);
+  outline-offset: var(--orbit-space-xxs);
+}
+
+.resourceCard {
+  --_index-card-radius: var(--orbit-radius-md);
+}
+
+.componentCard {
+  --_index-card-min-height: calc(var(--orbit-space-mega) + var(--orbit-space-xxl));
+}

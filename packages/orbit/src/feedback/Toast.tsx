@@ -89,7 +89,21 @@ export const Toast: React.FC<ToastProps> = ({ type, message, visible, onDismiss,
           onClick={onDismiss}
           aria-label={`Dismiss ${type.toLowerCase()} toast`}
         >
-          <FaIcon icon={FA.xmarkLarge} size={12} color="inherit" />
+          <svg
+            aria-hidden="true"
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2 2L10 10M10 2L2 10"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
         </button>
       )}
     </div>

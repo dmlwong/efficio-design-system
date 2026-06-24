@@ -34,4 +34,12 @@ describe('Toast', () => {
 
     expect(screen.getByRole('status')).toHaveTextContent('Muted event');
   });
+
+  it('renders an svg dismiss icon when dismissible', () => {
+    render(<Toast type="Info" message="Saved filters" visible onDismiss={() => {}} />);
+
+    const dismissButton = screen.getByRole('button', { name: 'Dismiss info toast' });
+
+    expect(dismissButton.querySelector('svg')).not.toBeNull();
+  });
 });

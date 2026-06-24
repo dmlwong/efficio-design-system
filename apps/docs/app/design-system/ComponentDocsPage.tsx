@@ -165,6 +165,9 @@ const TABLE_COLUMNS: TableColumn<ShowcaseTableRow>[] = [
   { id: 'owner', header: 'Owner', render: (row) => row.owner },
 ];
 
+const ALERT_FIGMA_TITLE = 'Title';
+const ALERT_FIGMA_DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+
 const SIDENAV_SAMPLE = {
   navItems: [
     { id: 'notifications', icon: '\uf0f3', label: 'Notifications', previewState: 'hover' as const },
@@ -1968,8 +1971,8 @@ function PrimaryPreview({ id }: { id: ComponentId }) {
       return (
         <Alert
           type="Information"
-          title="Contract analysis is ready"
-          description="Review the summary before sharing recommendations with the team."
+          title={ALERT_FIGMA_TITLE}
+          description={ALERT_FIGMA_DESCRIPTION}
           onDismiss={() => {}}
         />
       );
@@ -2616,8 +2619,8 @@ function VariantExamples({ id }: { id: ComponentId }) {
             <Alert
               key={type}
               type={type}
-              title={`${type} alert`}
-              description="Use concise supporting text that tells users what changed."
+              title={ALERT_FIGMA_TITLE}
+              description={ALERT_FIGMA_DESCRIPTION}
               onDismiss={() => {}}
             />
           ))}
@@ -2781,8 +2784,10 @@ export function ComponentDocsPage({ doc }: { doc: ComponentDoc }) {
         <aside
           className="component-docs-toc"
           style={{
-            position: 'sticky',
-            top: 88,
+            position: 'fixed',
+            top: 'calc(var(--orbit-space-l) + var(--orbit-space-s))',
+            right: 'max(var(--orbit-space-mega), calc((100vw - var(--orbit-sidenav-width) - 1180px) / 2 + var(--orbit-space-mega)))',
+            width: 220,
             borderLeft: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
             paddingLeft: 'var(--orbit-space-base)',
           }}

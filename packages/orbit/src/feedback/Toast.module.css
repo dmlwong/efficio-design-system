@@ -99,7 +99,7 @@
   justify-content: center;
   width: var(--orbit-space-m);
   height: var(--orbit-space-m);
-  padding: var(--orbit-space-s);
+  padding: 0;
   flex-shrink: 0;
 }
 

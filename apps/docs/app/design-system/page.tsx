@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type React from 'react';
 import { Headings, Text } from '@efficio/orbit';
 import { COMPONENT_NAV_GROUPS, getComponentDoc } from './componentDocs';
+import styles from './DesignSystemIndex.module.css';
 
 function CardDescription({ children }: { children: React.ReactNode }) {
   return (
@@ -31,19 +32,7 @@ function ResourceLink({
   return (
     <Link
       href={href}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--orbit-space-xs)',
-        border: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
-        borderRadius: 'var(--orbit-radius-md)',
-        padding: 'var(--orbit-space-base)',
-        textDecoration: 'none',
-        color: 'var(--orbit-color-text-primary)',
-        background: 'var(--orbit-color-bg-default)',
-        boxSizing: 'border-box',
-        minWidth: 0,
-      }}
+      className={`${styles.indexCard} ${styles.resourceCard}`}
     >
       <Headings size="Heading 5" style={{ overflowWrap: 'anywhere' }}>{title}</Headings>
       <CardDescription>{description}</CardDescription>
@@ -111,20 +100,7 @@ export default function DesignSystemPage() {
                     <Link
                       key={doc.id}
                       href={`/design-system/components/${doc.id}`}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 'var(--orbit-space-xs)',
-                        minHeight: 112,
-                        border: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
-                        borderRadius: 'var(--orbit-radius-sm)',
-                        padding: 'var(--orbit-space-base)',
-                        textDecoration: 'none',
-                        color: 'var(--orbit-color-text-primary)',
-                        background: 'var(--orbit-color-bg-default)',
-                        boxSizing: 'border-box',
-                        minWidth: 0,
-                      }}
+                      className={`${styles.indexCard} ${styles.componentCard}`}
                     >
                       <Headings size="Heading 5" style={{ overflowWrap: 'anywhere' }}>{doc.title}</Headings>
                       <CardDescription>{doc.description}</CardDescription>

@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FaIcon, Headings, Text } from '@efficio/orbit';
+import { FaIcon } from '@efficio/orbit';
+import {
+  clearDesignSystemSession,
+  getSafeDesignSystemNextPath,
+  readDesignSystemSession,
+} from '../auth';
+import type { DesignSystemSession } from '../auth';
 import {
   COMPONENT_SECTION_IDS,
   getComponentDoc,
@@ -28,6 +34,7 @@ const SIDEBAR_ICONS = {
   clear: '\uf00d',
   components: '\uf1b3',
   search: '\uf002',
+  signOut: '\uf2f5',
   tokens: '\uf121',
 };
 
@@ -120,9 +127,12 @@ function setSectionHash(id: string, mode: 'push' | 'replace') {
 
 export function DesignSystemShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mode, setMode] = useState<DesignSystemMode>('efficio');
   const [activeSection, setActiveSection] = useState('');
   const [componentSearch, setComponentSearch] = useState('');
+  const [session, setSession] = useState<DesignSystemSession | null>(null);
+  const [authStatus, setAuthStatus] = useState<'checking' | 'authenticated'>('checking');
   const sidebarRef = useRef<HTMLElement>(null);
   const isProgrammaticScrollRef = useRef(false);
   const pageMaxWidth = 1180;
@@ -156,28 +166,29 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
   const hasComponentNav = Boolean(navGroups?.length);
   const hasFilteredNavResults = Boolean(filteredNavGroups?.length);
 
-  const header = useMemo(() => {
-    if (isTokensPage) {
-      return {
-        title: 'Design Tokens',
-        subtitle: 'All semantic tokens - switches with Efficio/Orbit toggle',
-      };
-    }
-
-    if (componentDoc) {
-      return {
-        title: componentDoc.title,
-        subtitle: componentDoc.description,
-      };
-    }
-
-    return {
-      title: 'Orbit Design System',
-      subtitle: 'Component library showcase',
-    };
-  }, [componentDoc, isTokensPage]);
-
   const contentPadding = 'calc(var(--orbit-space-l) + var(--orbit-space-s)) var(--orbit-space-mega)';
+
+  useEffect(() => {
+    const storedSession = readDesignSystemSession();
+    if (storedSession) {
+      setSession(storedSession);
+      setAuthStatus('authenticated');
+      return;
+    }
+
+    const nextPath = getSafeDesignSystemNextPath(
+      `${window.location.pathname}${window.location.search}${window.location.hash}`,
+    );
+
+    router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
+  }, [router, pathname]);
+
+  const handleSignOut = () => {
+    clearDesignSystemSession();
+    setSession(null);
+    setAuthStatus('checking');
+    router.replace('/login');
+  };
 
   useEffect(() => {
     if (isComponentDetailPage && componentDoc) {
@@ -415,6 +426,26 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 
+  if (authStatus === 'checking') {
+    return (
+      <div
+        role="status"
+        style={{
+          minHeight: '100vh',
+          display: 'grid',
+          placeItems: 'center',
+          background: 'var(--orbit-color-bg-canvas)',
+          color: 'var(--orbit-color-text-secondary)',
+          fontFamily: 'var(--orbit-font-family-sans)',
+          fontSize: 'var(--orbit-text-sm)',
+          lineHeight: 'var(--orbit-leading-normal)',
+        }}
+      >
+        Loading design system
+      </div>
+    );
+  }
+
   return (
     <div
       className="ds-shell-root"
@@ -446,9 +477,11 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
           background: var(--orbit-color-text-secondary);
         }
         .ds-shell-nav-link,
-        .ds-shell-page-link { transition: background-color 0.15s ease; }
+        .ds-shell-page-link,
+        .ds-shell-sign-out { transition: background-color 0.15s ease; }
         .ds-shell-nav-link:hover,
-        .ds-shell-page-link:hover { background-color: var(--orbit-color-bg-hover) !important; }
+        .ds-shell-page-link:hover,
+        .ds-shell-sign-out:hover { background-color: var(--orbit-color-bg-hover) !important; }
         .ds-shell-root :where(a, button):focus-visible,
         .ds-shell-search-input:focus-visible {
           outline: calc(var(--orbit-space-px) * 2) solid var(--orbit-color-border-focused) !important;
@@ -459,7 +492,7 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
           top: var(--orbit-space-none);
           z-index: 2;
           background: var(--orbit-color-white);
-          padding: var(--orbit-space-none) var(--orbit-space-s) var(--orbit-space-base);
+          padding: var(--orbit-sidenav-padding-top) var(--orbit-space-s) var(--orbit-space-base);
           border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
           margin-bottom: var(--orbit-space-base);
         }
@@ -491,32 +524,10 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
             min-width: 0 !important;
           }
           .ds-shell-main { min-width: 0 !important; }
-          .ds-shell-header {
-            position: static !important;
-          }
-          .ds-shell-header-inner {
-            padding: var(--orbit-space-base) !important;
-            align-items: flex-start !important;
-            flex-wrap: wrap !important;
-            gap: var(--orbit-space-base) !important;
-          }
           .ds-shell-content {
             max-width: none !important;
             padding: var(--orbit-space-base) !important;
             overflow-x: hidden !important;
-          }
-          .ds-shell-header-title {
-            min-width: 0 !important;
-            max-width: 100% !important;
-            overflow-wrap: anywhere !important;
-          }
-          .ds-shell-header-title * {
-            overflow-wrap: anywhere !important;
-          }
-          .ds-shell-header-title span {
-            display: block !important;
-            max-width: 100% !important;
-            white-space: normal !important;
           }
         }
       `}</style>
@@ -532,43 +543,43 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
           height: '100vh',
           backgroundColor: 'var(--orbit-color-white)',
           borderRight: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
-          padding: 'var(--orbit-sidenav-padding-top) var(--orbit-space-none)',
+          padding: 'var(--orbit-space-none)',
           boxSizing: 'border-box',
           fontFamily: 'var(--orbit-font-family-sans)',
         }}
       >
-        <div
-          style={{
-            padding: 'var(--orbit-space-none) var(--orbit-sidenav-header-padding-inline) var(--orbit-sidenav-header-padding-block-end)',
-            borderBottom: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
-            marginBottom: 'var(--orbit-space-base)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--orbit-space-s)',
-          }}
-        >
-          <span
+        <div className="ds-shell-sidebar-utility">
+          <div
             style={{
+              padding: 'var(--orbit-space-none) var(--orbit-space-none) var(--orbit-sidenav-header-padding-block-end)',
+              borderBottom: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
+              marginBottom: 'var(--orbit-space-base)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              width: 'var(--orbit-space-l)',
-              height: 'var(--orbit-space-l)',
-              borderRadius: 'var(--orbit-radius-sm)',
-              background: 'linear-gradient(to bottom, var(--orbit-color-sidenav-gradient-from), var(--orbit-color-sidenav-gradient-to))',
-              flexShrink: 0,
+              gap: 'var(--orbit-space-s)',
+              minWidth: 0,
             }}
-            aria-hidden="true"
           >
-            <span style={{ fontSize: 'var(--orbit-text-sm)', color: 'var(--orbit-color-white)', fontWeight: 'var(--orbit-font-weight-bold)' }}>O</span>
-          </span>
-          <div>
-            <div style={{ fontSize: 'var(--orbit-text-sm)', fontWeight: 'var(--orbit-font-weight-bold)', color: 'var(--orbit-color-text-primary)', lineHeight: 'var(--orbit-leading-tight)' }}>Orbit</div>
-            <div style={{ fontSize: 'var(--orbit-text-xs)', color: 'var(--orbit-color-text-secondary)', lineHeight: 'var(--orbit-leading-relaxed)' }}>Design System</div>
+            <span
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 'var(--orbit-space-l)',
+                height: 'var(--orbit-space-l)',
+                borderRadius: 'var(--orbit-radius-sm)',
+                background: 'linear-gradient(to bottom, var(--orbit-color-sidenav-gradient-from), var(--orbit-color-sidenav-gradient-to))',
+                flexShrink: 0,
+              }}
+              aria-hidden="true"
+            >
+              <span style={{ fontSize: 'var(--orbit-text-sm)', color: 'var(--orbit-color-white)', fontWeight: 'var(--orbit-font-weight-bold)' }}>O</span>
+            </span>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 'var(--orbit-text-sm)', fontWeight: 'var(--orbit-font-weight-bold)', color: 'var(--orbit-color-text-primary)', lineHeight: 'var(--orbit-leading-tight)', overflowWrap: 'anywhere' }}>Design System</div>
+            </div>
           </div>
-        </div>
 
-        <div className="ds-shell-sidebar-utility">
           {themeToggle}
 
           {hasComponentNav && (
@@ -699,6 +710,72 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
             </div>
           )}
         </div>
+
+        <div
+          style={{
+            position: 'sticky',
+            bottom: 'var(--orbit-space-none)',
+            zIndex: 'var(--orbit-z-sticky)',
+            margin: 'var(--orbit-space-base) var(--orbit-space-none) var(--orbit-space-none)',
+            padding: 'var(--orbit-space-base) var(--orbit-space-s)',
+            borderTop: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
+            backgroundColor: 'var(--orbit-color-white)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--orbit-space-xs)',
+            minWidth: 0,
+          }}
+        >
+          <span
+            style={{
+              color: 'var(--orbit-color-text-secondary)',
+              fontSize: 'var(--orbit-text-xs)',
+              fontWeight: 'var(--orbit-font-weight-semibold)',
+              lineHeight: 'var(--orbit-leading-tight)',
+              textTransform: 'uppercase',
+            }}
+          >
+            Signed in
+          </span>
+          <span
+            style={{
+              color: 'var(--orbit-color-text-primary)',
+              fontSize: 'var(--orbit-text-sm)',
+              fontWeight: 'var(--orbit-font-weight-medium)',
+              lineHeight: 'var(--orbit-leading-normal)',
+              minWidth: 0,
+              overflowWrap: 'anywhere',
+            }}
+          >
+            {session?.name ?? 'Design system user'}
+          </span>
+          <button
+            className="ds-shell-sign-out"
+            type="button"
+            onClick={handleSignOut}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--orbit-space-s)',
+              minHeight: 'var(--orbit-space-xl)',
+              border: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
+              borderRadius: 'var(--orbit-radius-sm)',
+              background: 'var(--orbit-color-bg-default)',
+              color: 'var(--orbit-color-text-secondary)',
+              cursor: 'pointer',
+              fontFamily: 'var(--orbit-font-family-sans)',
+              fontSize: 'var(--orbit-text-sm)',
+              lineHeight: 'var(--orbit-leading-normal)',
+              padding: 'var(--orbit-space-xs) var(--orbit-space-s)',
+              textAlign: 'left',
+            }}
+          >
+            <span aria-hidden="true" style={sidebarIconStyle(false)}>
+              <FaIcon icon={SIDEBAR_ICONS.signOut} color="currentColor" />
+            </span>
+            <span style={{ minWidth: 0, overflowWrap: 'anywhere' }}>Sign out</span>
+          </button>
+        </div>
       </nav>
 
       <div
@@ -706,38 +783,6 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
         data-theme={mode === 'orbit' ? 'orbit' : undefined}
         style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}
       >
-        <div
-          className="ds-shell-header"
-          style={{
-            position: 'sticky',
-            top: 'var(--orbit-space-none)',
-            zIndex: 'var(--orbit-z-sticky)',
-            backgroundColor: 'var(--orbit-color-white)',
-            borderBottom: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
-            boxSizing: 'border-box',
-          }}
-        >
-          <div
-            className="ds-shell-header-inner"
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: 'var(--orbit-space-base)',
-              width: '100%',
-              maxWidth: pageMaxWidth,
-              marginInline: 'auto',
-              padding: 'var(--orbit-space-base) var(--orbit-space-mega)',
-              boxSizing: 'border-box',
-            }}
-          >
-            <div className="ds-shell-header-title">
-              <Headings size="Heading 4">{header.title}</Headings>
-              <Text variant="Secondary" size="Small">{header.subtitle}</Text>
-            </div>
-          </div>
-        </div>
-
         <div
           className="ds-shell-content"
           style={{
