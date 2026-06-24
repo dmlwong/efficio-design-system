@@ -18,6 +18,7 @@ import {
 import { TOKEN_SECTION_IDS } from './tokenNav';
 
 export type DesignSystemMode = 'efficio' | 'orbit';
+export const DesignSystemThemeContext = React.createContext<DesignSystemMode>('efficio');
 
 export interface DesignSystemNavItem {
   label: string;
@@ -92,6 +93,8 @@ const COMPONENT_ICON_MAP: Partial<Record<string, string>> = {
   typography: '\uf031',
 };
 
+const DESIGN_SYSTEM_MODE_STORAGE_KEY = 'orbit-design-system-mode';
+
 function getGroupIcon(group: string) {
   return GROUP_ICON_MAP[group.toLowerCase()] ?? '\uf0c8';
 }
@@ -135,6 +138,7 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
   const [authStatus, setAuthStatus] = useState<'checking' | 'authenticated'>('checking');
   const sidebarRef = useRef<HTMLElement>(null);
   const isProgrammaticScrollRef = useRef(false);
+  const hasLoadedModeRef = useRef(false);
   const pageMaxWidth = 1180;
 
   const componentId = getComponentIdFromPath(pathname);
@@ -167,6 +171,31 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
   const hasFilteredNavResults = Boolean(filteredNavGroups?.length);
 
   const contentPadding = 'calc(var(--orbit-space-l) + var(--orbit-space-s)) var(--orbit-space-mega)';
+
+  useEffect(() => {
+    if (hasLoadedModeRef.current || typeof window === 'undefined') return;
+
+    try {
+      const storedMode = window.localStorage.getItem(DESIGN_SYSTEM_MODE_STORAGE_KEY);
+      if (storedMode === 'orbit' || storedMode === 'efficio') {
+        setMode(storedMode);
+      }
+    } catch {
+      // Ignore storage access issues and keep the default theme.
+    } finally {
+      hasLoadedModeRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedModeRef.current || typeof window === 'undefined') return;
+
+    try {
+      window.localStorage.setItem(DESIGN_SYSTEM_MODE_STORAGE_KEY, mode);
+    } catch {
+      // Ignore storage access issues so the docs remain usable.
+    }
+  }, [mode]);
 
   useEffect(() => {
     const storedSession = readDesignSystemSession();
@@ -291,10 +320,10 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
     padding: 'var(--orbit-space-xs) var(--orbit-space-s)',
     borderRadius: 'var(--orbit-radius-sm)',
     border: mode === value
-      ? 'calc(var(--orbit-space-px) * 2) solid var(--orbit-color-border-selected)'
-      : 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
-    background: mode === value ? 'var(--orbit-color-bg-selected)' : 'var(--orbit-color-bg-default)',
-    color: 'var(--orbit-color-text-primary)',
+      ? 'var(--orbit-space-px) solid var(--orbit-color-status-low-border-information)'
+      : 'var(--orbit-space-px) solid var(--orbit-color-btn-secondary-border)',
+    background: mode === value ? 'var(--orbit-color-status-low-bg-information)' : 'var(--orbit-color-btn-secondary-bg)',
+    color: mode === value ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-btn-secondary-fg)',
     fontWeight: mode === value ? 'var(--orbit-font-weight-semibold)' : 'var(--orbit-font-weight-regular)',
     cursor: 'pointer',
     fontSize: 'var(--orbit-text-sm)',
@@ -310,14 +339,14 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
     padding: 'var(--orbit-space-xs) var(--orbit-space-s)',
     minHeight: 'var(--orbit-space-xl)',
     borderRadius: 'var(--orbit-radius-sm)',
-    backgroundColor: currentPage === page ? 'var(--orbit-color-bg-hover)' : 'transparent',
+    backgroundColor: currentPage === page ? 'var(--orbit-color-status-low-bg-information)' : 'transparent',
     fontSize: 'var(--orbit-text-sm)',
-    color: currentPage === page ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-text-secondary)',
+    color: currentPage === page ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-btn-secondary-fg)',
     textDecoration: 'none',
     fontWeight: currentPage === page ? 'var(--orbit-font-weight-medium)' : 'var(--orbit-font-weight-regular)',
     minWidth: 0,
     lineHeight: 'var(--orbit-leading-normal)',
-    boxShadow: currentPage === page ? 'inset calc(var(--orbit-space-px) * 3) 0 0 var(--orbit-color-border-selected)' : undefined,
+    boxShadow: currentPage === page ? 'inset calc(var(--orbit-space-px) * 2) 0 0 var(--orbit-color-status-low-border-information)' : undefined,
   });
 
   const navLinkStyle = (active: boolean): React.CSSProperties => ({
@@ -327,22 +356,22 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
     padding: 'var(--orbit-space-xs) var(--orbit-space-s)',
     fontSize: 'var(--orbit-sidenav-row-font-size)',
     textDecoration: 'none',
-    color: active ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-text-secondary)',
+    color: active ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-btn-secondary-fg)',
     fontWeight: active ? 'var(--orbit-font-weight-medium)' : 'var(--orbit-font-weight-regular)',
-    backgroundColor: active ? 'var(--orbit-color-bg-selected)' : 'transparent',
+    backgroundColor: active ? 'var(--orbit-color-status-low-bg-information)' : 'transparent',
     borderRadius: 'var(--orbit-radius-sm)',
     cursor: 'pointer',
     lineHeight: 'var(--orbit-leading-relaxed)',
     minHeight: 'var(--orbit-space-l)',
     minWidth: 0,
     overflowWrap: 'anywhere',
-    boxShadow: active ? 'inset calc(var(--orbit-space-px) * 3) 0 0 var(--orbit-color-border-selected)' : undefined,
+    boxShadow: active ? 'inset calc(var(--orbit-space-px) * 2) 0 0 var(--orbit-color-status-low-border-information)' : undefined,
   });
 
   const sidebarIconStyle = (active = false): React.CSSProperties => ({
     width: 'var(--orbit-space-base)',
     flexShrink: 0,
-    color: active ? 'var(--orbit-color-text-primary)' : 'var(--orbit-color-text-secondary)',
+    color: active ? 'var(--orbit-color-status-low-border-information)' : 'var(--orbit-color-btn-secondary-icon)',
     textAlign: 'center',
   });
 
@@ -449,6 +478,7 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="ds-shell-root"
+      data-theme={mode === 'orbit' ? 'orbit' : undefined}
       style={{ display: 'flex', fontFamily: 'var(--orbit-font-family-sans)', minHeight: '100vh' }}
     >
       <style>{`
@@ -478,10 +508,10 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
         }
         .ds-shell-nav-link,
         .ds-shell-page-link,
-        .ds-shell-sign-out { transition: background-color 0.15s ease; }
+        .ds-shell-sign-out { transition: background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease; }
         .ds-shell-nav-link:hover,
         .ds-shell-page-link:hover,
-        .ds-shell-sign-out:hover { background-color: var(--orbit-color-bg-hover) !important; }
+        .ds-shell-sign-out:hover { background-color: var(--orbit-color-btn-secondary-bg-hover) !important; }
         .ds-shell-root :where(a, button):focus-visible,
         .ds-shell-search-input:focus-visible {
           outline: calc(var(--orbit-space-px) * 2) solid var(--orbit-color-border-focused) !important;
@@ -492,12 +522,12 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
           top: var(--orbit-space-none);
           z-index: 2;
           background: var(--orbit-color-white);
-          padding: var(--orbit-sidenav-padding-top) var(--orbit-space-s) var(--orbit-space-base);
+          padding: var(--orbit-space-m) var(--orbit-space-s) var(--orbit-space-base);
           border-bottom: var(--orbit-space-px) solid var(--orbit-color-border-default);
           margin-bottom: var(--orbit-space-base);
         }
         .ds-shell-search-input::placeholder {
-          color: var(--orbit-color-text-secondary);
+          color: var(--orbit-color-btn-secondary-fg);
         }
         .ds-shell-search-input::-webkit-search-cancel-button {
           appearance: none;
@@ -551,7 +581,7 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
         <div className="ds-shell-sidebar-utility">
           <div
             style={{
-              padding: 'var(--orbit-space-none) var(--orbit-space-none) var(--orbit-sidenav-header-padding-block-end)',
+              padding: 'var(--orbit-space-none) var(--orbit-space-none) var(--orbit-space-m)',
               borderBottom: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
               marginBottom: 'var(--orbit-space-base)',
               display: 'flex',
@@ -608,9 +638,9 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
                 style={{
                   width: '100%',
                   height: 'var(--orbit-space-xl)',
-                  border: 'var(--orbit-space-px) solid var(--orbit-color-border-default)',
+                  border: 'var(--orbit-space-px) solid var(--orbit-color-btn-secondary-border)',
                   borderRadius: 'var(--orbit-radius-sm)',
-                  background: 'var(--orbit-color-bg-default)',
+                  background: 'var(--orbit-color-btn-secondary-bg)',
                   color: 'var(--orbit-color-text-primary)',
                   boxSizing: 'border-box',
                   padding: 'var(--orbit-space-xs) calc(var(--orbit-space-xl) + var(--orbit-space-xs)) var(--orbit-space-xs) var(--orbit-space-xl)',
@@ -778,26 +808,27 @@ export function DesignSystemShell({ children }: { children: React.ReactNode }) {
         </div>
       </nav>
 
-      <div
-        className="ds-shell-main"
-        data-theme={mode === 'orbit' ? 'orbit' : undefined}
-        style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}
-      >
+      <DesignSystemThemeContext.Provider value={mode}>
         <div
-          className="ds-shell-content"
-          style={{
-            flex: 1,
-            width: '100%',
-            maxWidth: pageMaxWidth,
-            marginInline: 'auto',
-            padding: contentPadding,
-            boxSizing: 'border-box',
-            overflowY: 'auto',
-          }}
+          className="ds-shell-main"
+          style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}
         >
-          {children}
+          <div
+            className="ds-shell-content"
+            style={{
+              flex: 1,
+              width: '100%',
+              maxWidth: pageMaxWidth,
+              marginInline: 'auto',
+              padding: contentPadding,
+              boxSizing: 'border-box',
+              overflowY: 'auto',
+            }}
+          >
+            {children}
+          </div>
         </div>
-      </div>
+      </DesignSystemThemeContext.Provider>
     </div>
   );
 }

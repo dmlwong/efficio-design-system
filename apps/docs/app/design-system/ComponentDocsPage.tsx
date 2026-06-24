@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   Avatar,
@@ -73,6 +73,7 @@ import {
   type ComponentId,
   getComponentDoc,
 } from './componentDocs';
+import { DesignSystemThemeContext } from './DesignSystemShell';
 
 interface AnatomyItem {
   label: string;
@@ -1653,8 +1654,10 @@ function RelatedComponents({ ids }: { ids: ComponentId[] }) {
 }
 
 function DocsSideNavPreview({ compact = false }: { compact?: boolean }) {
+  const mode = useContext(DesignSystemThemeContext);
+
   return (
-    <div data-theme="orbit" style={{ height: compact ? 560 : 620, overflow: 'hidden', borderRadius: 'var(--orbit-radius-sm)' }}>
+    <div data-theme={mode === 'orbit' ? 'orbit' : undefined} style={{ height: compact ? 560 : 620, overflow: 'hidden', borderRadius: 'var(--orbit-radius-sm)' }}>
       <SideNav
         appName="Connected Platform"
         clientName="Aarke"
